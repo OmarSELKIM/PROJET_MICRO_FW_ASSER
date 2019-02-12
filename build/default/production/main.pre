@@ -12078,7 +12078,7 @@ extern char * ftoa(float f, int * status);
 #pragma config CONFIG7L = 0xFF
 #pragma config CONFIG7H = 0x40
 
-# 84
+# 88
 long PWM_freq = 12000;
 long Tosc = (1 / 11059200);
 
@@ -12090,41 +12090,56 @@ far unsigned char EEPROM @ 0x100;
 
 far unsigned char LCD_DATA_PORT @ 0x1A0002;
 
-# 97
+# 101
 far unsigned char LCD_CTRL_PORT @ 0x1A0000;
 
-# 40 "utils.h"
-unsigned char VAL_CLAV = 0, cpt18TCY = 0, RX_U_2, PWM_VAL;
+# 62 "utils.h"
+typedef struct User{
+char UserId;
+char UserPsw;
+}User;
+
+User usrTab[3];
+
+unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL;
 char chaine_adc[100], chaine_clav[4] = {'0', '0', '0', '\0'};
 int a = 0, PWM_clav = 0, adc_value;
 unsigned char RX_U_2;
 char chaine_asser[16];
-int iREAD = 0;
 volatile int count = 0;
 int S_vent = 0;
 
-# 55
-void DelayFor18TCY(void);
+# 83
+void DelayFor1TCY(void);
+
+void Ports_Init();
+void PWM_Init();
+void Timer_Init();
+void PORT_Init();
+void Interrupt_Init(void);
+
+void PWM_Duty(unsigned int duty);
+
 void DelayLCDLong(void);
 void DelayLCDShort(void);
+void LCD_Init();
+void LCD_Putc(char car);
+void LCD_Puts(char chaine[]);
+void LCD_SetCursorAt(unsigned char _line,unsigned char _row);
+void LCD_Clear(void);
+void LCD_ReturnHome(void);
+void LCD_ShiftDisplay(char _direction,int _offset);
 
-void Ports_init();
-void PWM_init();
-void PWM_Duty(unsigned int duty);
-void Timer_init();
-unsigned int ADC_Read();
-void PORT_init();
-void LCD_init();
-void LCD_puts(char chaine[]);
 void afficheur_write_clav();
-void affichage_chaine(char *chaine);
 void DisplayOnLcdPosition(char line, char row, char data[]);
-void send_1(char c);
-void send_msg(char *c);
 void interrupt interruptions(void);
-void UART_PrintByte(char c);
-void UART_PrintStr(char *c);
-void CLAVIER_read();
+
+void UART_Putc(char c);
+void UART_Puts(char c[]);
+
+char CLAVIER_GetPressedKey(void);
+
+unsigned int ADC_Read();
 
 # 8 "main.c"
 char S_vent_string[10];
@@ -12148,15 +12163,16 @@ loop();
 
 
 void setup(void) {
-Ports_init();
-PWM_init();
-Timer_init();
-LCD_init();
+Ports_Init();
+PWM_Init();
+Timer_Init();
+Interrupt_Init();
+LCD_Init();
 
 T0CONbits.TMR0ON = 1;
 TMR1ON = 1;
 TMR0L = 1;
-LCD_puts("Init ok");
+LCD_Puts("Init ok");
 for(char i=0;i<200;i++){
 _delay((unsigned long)((10)*(11059200/4000.0)));
 }
@@ -12164,7 +12180,7 @@ _delay((unsigned long)((10)*(11059200/4000.0)));
 
 void loop(void) {
 
-# 51
+# 52
 if (TMR1IF == 1) {
 
 count++;
@@ -12219,7 +12235,7 @@ if (VAL_CLAV != 0x0f) {
 DisplayOnLcdPosition(1, 5, chaine_clav);
 }
 _delay((unsigned long)((20)*(11059200/4000.0)));
-affichage_chaine("%");
+LCD_Puts("%");
 _delay((unsigned long)((20)*(11059200/4000.0)));
 
 _delay((unsigned long)((20)*(11059200/4000.0)));
@@ -12229,6 +12245,6 @@ DisplayOnLcdPosition(2, 0, "Code:");
 
 }
 
-# 132
+# 133
 }
 

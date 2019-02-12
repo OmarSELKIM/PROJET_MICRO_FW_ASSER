@@ -9152,30 +9152,30 @@ Version 3.2 HI-TECH Software Intermediate Code
 [p x EBRT7=OFF ]
 "66
 [p x EBRTB=OFF ]
-"84
+"88
 [v _PWM_freq `l ~T0 @X0 1 e ]
 [i _PWM_freq
 -> -> 12000 `i `l
 ]
-[; ;device_config.h: 84: long PWM_freq = 12000;
-"85
+[; ;device_config.h: 88: long PWM_freq = 12000;
+"89
 [v _Tosc `l ~T0 @X0 1 e ]
 [i _Tosc
 / -> -> 1 `i `l -> 11059200 `l
 ]
-[; ;device_config.h: 85: long Tosc = (1 / 11059200);
-"90
+[; ;device_config.h: 89: long Tosc = (1 / 11059200);
+"94
 [v _CLAVIER `Fuc ~T0 @X0 1 e@1572864 ]
-[; ;device_config.h: 90: far unsigned char CLAVIER @ 0x180000;
-"91
+[; ;device_config.h: 94: far unsigned char CLAVIER @ 0x180000;
+"95
 [v _EEPROM `Fuc ~T0 @X0 1 e@256 ]
-[; ;device_config.h: 91: far unsigned char EEPROM @ 0x100;
-"93
-[v _LCD_DATA_PORT `Fuc ~T0 @X0 1 e@1703938 ]
-[; ;device_config.h: 93: far unsigned char LCD_DATA_PORT @ 0x1A0002;
+[; ;device_config.h: 95: far unsigned char EEPROM @ 0x100;
 "97
+[v _LCD_DATA_PORT `Fuc ~T0 @X0 1 e@1703938 ]
+[; ;device_config.h: 97: far unsigned char LCD_DATA_PORT @ 0x1A0002;
+"101
 [v _LCD_CTRL_PORT `Fuc ~T0 @X0 1 e@1703936 ]
-[; ;device_config.h: 97: far unsigned char LCD_CTRL_PORT @ 0x1A0000;
+[; ;device_config.h: 101: far unsigned char LCD_CTRL_PORT @ 0x1A0000;
 [; ;pin_manager.h: 86: void PIN_MANAGER_Initialize (void);
 [; ;pin_manager.h: 98: void PIN_MANAGER_IOC(void);
 [; ;mcc.h: 69: void SYSTEM_Initialize(void);

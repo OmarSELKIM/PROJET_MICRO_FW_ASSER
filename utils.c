@@ -6,25 +6,8 @@
  *              - DelayPORXLCD() provides at least 15ms delay
  *              - DelayXLCD() provides at least 5ms delay
  */
-void DelayFor18TCY(void) {
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
-    cpt18TCY++; //1 top tclk
+void DelayFor1TCY(void) {
+    cpt1TCY++; //1 top tclk
 }
 
 void DelayLCDLong(void) {
@@ -35,7 +18,20 @@ void DelayLCDShort(void) {
     __delay_us(50);
 }
 
-void Ports_init() {
+void Interrupt_Init(void) {
+    INTCON2 = 0b01111001;
+    INTCON = 0b11001001;
+    INTCONbits.INT0IE = 1;
+    INTCONbits.GIE = 1;
+    INTCONbits.INT0IF = 0;
+    RCONbits.IPEN = 1;
+    PIE1bits.ADIE = 1;
+    IPR1bits.ADIP = 1;
+    PIR1bits.ADIF = 0;
+    INTCON3 = 0b01001001;
+}
+
+void Ports_Init() {
     //Config IT
     INTCON = 0b11010000;
     // Désactivation du bus externe
@@ -83,7 +79,7 @@ void Ports_init() {
     __delay_ms(50);
 }
 
-void PWM_init() {
+void PWM_Init() {
     PR2 = (_XTAL_FREQ / (PWM_freq * 4 * TMR2PRESCALE)) - 1; //Setting the PR2 formulae using Datasheet // Makes the PWM work in 1KHZ
     CCP1M3 = 1;
     CCP1M2 = 1; //Configure the CCP1 module 
@@ -104,7 +100,7 @@ void PWM_Duty(unsigned int duty) {
     }
 }
 
-void Timer_init() {
+void Timer_Init() {
 
     T1CON = 0b01101001;
 
@@ -116,33 +112,7 @@ void Timer_init() {
 
 }
 
-unsigned int ADC_Read() {
-    //unsigned long adc_result;
-    unsigned long pot;
-    unsigned long pot_value;
-    int valeur_pwm;
-
-    ADCON0bits.GO = 1;
-
-    while (ADCON0bits.GO); //Bloquant
-
-    if (ADRES > 0xB33) {
-        LATGbits.LATG0 = 1;
-    } else {
-        LATGbits.LATG0 = 0;
-    }
-
-    //adc_result = ADRES * 1023 / 4095; //Convertie sur 0-1023
-    //return adc_result;
-    pot = ADRES;
-    pot_value = pot * 1023 / 4095; //Convertie sur 0-1023
-    valeur_pwm = pot_value * 100 / 1023;
-    PWM_VAL = (char) (valeur_pwm);
-    sprintf(chaine_adc, "%3d", pot_value * 100 / 1023);
-    return pot_value;
-}
-
-void PORT_init() {
+void PORT_Init() {
     //Config IT
     INTCON = 0b11010000;
     // Désactivation du bus externe
@@ -190,7 +160,7 @@ void PORT_init() {
     __delay_ms(50);
 }
 
-void LCD_init() {
+void LCD_Init() {
     //Config IT
     //INTCON=0b10010000;
 
@@ -238,11 +208,46 @@ void LCD_init() {
     __delay_ms(50);
 }
 
-void LCD_puts(char chaine[]) {
+void LCD_Putc(char car) {
+    LCD_DATA_PORT = car;
+    DelayLCDShort();
+}
+
+void LCD_Puts(char chaine[]) {
     unsigned char i = 0;
     while (chaine[i] != '\0') {
         LCD_DATA_PORT = chaine[i];
         i++;
+        DelayLCDShort();
+    }
+}
+
+void LCD_SetCursorAt(unsigned char _line, unsigned char _row) {
+    if (_line == 1) {
+        LCD_CTRL_PORT = (0x80) | ((_row) & 0x0f);
+    } else {
+        LCD_CTRL_PORT = (0xC0) | ((_row) & 0x0f);
+    }
+    DelayLCDShort();
+}
+
+void LCD_Clear(void) {
+    LCD_CTRL_PORT = LCD_CMD_DISP_CLEAR;
+    DelayLCDLong();
+}
+
+void LCD_ReturnHome(void) {
+    LCD_CTRL_PORT = LCD_CMD_RETUNR_HOME;
+    DelayLCDLong();
+}
+
+void LCD_ShiftDisplay(byte _direction, int _offset) {
+    for (byte i = 0; i <= _offset; i++) {
+        if (_direction == LCD_SHIFT_LEFT) {
+            LCD_CTRL_PORT = LCD_CMD_SHIFT1_DISP_L;
+        } else {
+            LCD_CTRL_PORT = LCD_CMD_SHIFT1_DISP_R;
+        }
         DelayLCDShort();
     }
 }
@@ -263,20 +268,6 @@ void DisplayOnLcdPosition(char line, char row, char data[]) {
     __delay_ms(20);
 }
 
-void send_1(char c) {
-    // attente de la fin de la transmission
-    while (TXSTA1bits.TRMT == 0);
-    TXREG1 = c; // envoie du nouveau byte[i];
-
-}
-
-void send_msg(char *c) {
-    for (int i = 0; i < 14; i++) {
-        while (TXSTA1bits.TRMT == 0);
-        TXREG1 = c[i]; // envoie du nouveau byte[i];
-    }
-}
-
 void interrupt interruptions(void) {
     if (RC2IF) {
         while (PIR3bits.RC2IF == 0) {
@@ -288,13 +279,13 @@ void interrupt interruptions(void) {
             }
         }
         RX_U_2 = RCREG2;
-        send_1(RX_U_2);
+        UART_Putc(RX_U_2);
     }
 
     if (INT0IF) // flag 1
     {
         INT0IF = 0; // Reset the external interrupt flag
-        CLAVIER_read();
+        CLAVIER_GetPressedKey();
         //LCD_CTRL_PORT = 0x14; //déplace le curseur à droite
         //LCD_CTRL_PORT = 0x10; //déplace le curseur à gauche
         switch (VAL_CLAV) {
@@ -317,7 +308,7 @@ void interrupt interruptions(void) {
 
                 //send_1(0x09); //décale TAB
                 //send_1(0x09); //décale TAB
-                send_1(0x14); //petite police
+                UART_Putc(0x14); //petite police
                 //send_1(0x0E); //grande police
 
                 if (SWI_1 == 1) {
@@ -325,17 +316,17 @@ void interrupt interruptions(void) {
                 }
                 if (SWI_1 == 0) {
                     //send_msg(VAL_CLAV);
-                    send_msg("PWM Clav:");
+                    UART_Puts("PWM Clav:");
                     __delay_ms(20);
-                    send_msg(chaine_clav);
+                    UART_Puts(chaine_clav);
                     __delay_ms(20);
-                    send_msg("%");
+                    UART_Putc('%');
                     __delay_ms(20);
                     PWM_Duty(PWM_clav); //Applique la valeur potar au Ventilateur en PWM
                 }
                 __delay_ms(20);
-                send_1(0x0A); //Retour à la ligne imprimante
-                send_1(0x0D); //Retour chariot
+                UART_Putc(0x0A); //Retour à la ligne imprimante
+                UART_Putc(0x0D); //Retour chariot
                 __delay_ms(50);
                 break;
             default:
@@ -346,27 +337,46 @@ void interrupt interruptions(void) {
     }
 }
 
-void UART_PrintByte(char c) { //UART Imprimate
-    // attente de la fin de la transmission
-    while (TXSTA1bits.TRMT == 0);
-    TXREG1 = c; // envoie du nouveau byte[i];
-
+void UART_Putc(char c) {
+    while (UART_BUSY);
+    TXREG1 = c;
 }
 
-void UART_PrintStr(char *c) { // Uart impr chaine
+void UART_Puts(char c[]) {
     for (int i = 0; i < 14; i++) {
-        while (TXSTA1bits.TRMT == 0);
-        TXREG1 = c[i]; // envoie du nouveau byte[i];
+        while (UART_BUSY);
+        UART_Putc(c[i]);
     }
 }
 
-void CLAVIER_read() {
-    VAL_CLAV = CLAVIER & 0x0f;
-    if (iREAD == 3) {
-        iREAD = 0;
-    }
-    chaine_clav[iREAD] = VAL_CLAV + 0x30;
-    iREAD++;
-
+byte CLAVIER_GetPressedKey(void) {
+    byte _val = 0x00;
+    _val = CLAVIER & 0x0f;
+    return _val;
 }
 
+unsigned int ADC_Read() {
+    //unsigned long adc_result;
+    unsigned long pot;
+    unsigned long pot_value;
+    int valeur_pwm;
+
+    ADCON0bits.GO = 1;
+
+    while (ADCON0bits.GO); //Bloquant
+
+    if (ADRES > 0xB33) {
+        LATGbits.LATG0 = 1;
+    } else {
+        LATGbits.LATG0 = 0;
+    }
+
+    //adc_result = ADRES * 1023 / 4095; //Convertie sur 0-1023
+    //return adc_result;
+    pot = ADRES;
+    pot_value = pot * 1023 / 4095; //Convertie sur 0-1023
+    valeur_pwm = pot_value * 100 / 1023;
+    PWM_VAL = (char) (valeur_pwm);
+    sprintf(chaine_adc, "%3d", pot_value * 100 / 1023);
+    return pot_value;
+}

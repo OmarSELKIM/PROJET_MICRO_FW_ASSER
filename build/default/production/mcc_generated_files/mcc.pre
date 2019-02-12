@@ -11919,7 +11919,7 @@ extern void _delay3(unsigned char);
 #pragma config CONFIG7L = 0xFF
 #pragma config CONFIG7H = 0x40
 
-# 84
+# 88
 long PWM_freq = 12000;
 long Tosc = (1 / 11059200);
 
@@ -11931,7 +11931,7 @@ far unsigned char EEPROM @ 0x100;
 
 far unsigned char LCD_DATA_PORT @ 0x1A0002;
 
-# 97
+# 101
 far unsigned char LCD_CTRL_PORT @ 0x1A0000;
 
 # 86 "mcc_generated_files/pin_manager.h"

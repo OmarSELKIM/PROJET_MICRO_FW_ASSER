@@ -19,7 +19,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC8 1.45 or later
         MPLAB             :  MPLAB X 4.15
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -42,7 +42,7 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 #ifndef DEVICE_CONFIG_H
 #define	DEVICE_CONFIG_H
@@ -77,6 +77,10 @@
 //#define LED_6   LATDbits.LATD6
 //#define LED_7   LATDbits.LATD7
 
+#define byte char
+
+#define UART_BUSY TXSTA1bits.TRMT == 0
+
 //#define BP1     PORTGbits.RG3
 #define _XTAL_FREQ 11059200
 //Déclaration PWM
@@ -99,4 +103,4 @@ far unsigned char LCD_CTRL_PORT @ 0x1A0000;
 #endif	/* DEVICE_CONFIG_H */
 /**
  End of File
-*/
+ */

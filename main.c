@@ -26,15 +26,16 @@ void main() {
 
 /*Fonctions*/
 void setup(void) {
-    Ports_init(); //Initialisation ports
-    PWM_init(); //Initialisation PWM
-    Timer_init(); //Initalisation timer1 (PWM)
-    LCD_init(); //Initialisation LCD
+    Ports_Init(); //Initialisation ports
+    PWM_Init(); //Initialisation PWM
+    Timer_Init(); //Initalisation timer1 (PWM)
+    Interrupt_Init();
+    LCD_Init(); //Initialisation LCD
 
     T0CONbits.TMR0ON = 1; //Switch On Timer-0
     TMR1ON = 1;
     TMR0L = 1; //reset timer 0 pour PWM
-    LCD_puts("Init ok");
+    LCD_Puts("Init ok");
     for(char i=0;i<200;i++){
         __delay_ms(10);
     }
