@@ -1,17 +1,21 @@
 Version 3.2 HI-TECH Software Intermediate Code
+[s S1235 `uc 1 `uc 1 ]
+[n S1235 User UserId UserPsw ]
 [p mainexit ]
 "13 main.c
 [v _setup `(v ~T0 @X0 0 ef ]
 "14
 [v _loop `(v ~T0 @X0 0 ef ]
-"59 utils.h
-[v _Ports_init `(v ~T0 @X0 0 ef ]
-"60
-[v _PWM_init `(v ~T0 @X0 0 ef ]
-"62
-[v _Timer_init `(v ~T0 @X0 0 ef ]
-"65
-[v _LCD_init `(v ~T0 @X0 0 ef ]
+"87 utils.h
+[v _Ports_Init `(v ~T0 @X0 0 ef ]
+"88
+[v _PWM_Init `(v ~T0 @X0 0 ef ]
+"89
+[v _Timer_Init `(v ~T0 @X0 0 ef ]
+"91
+[v _Interrupt_Init `(v ~T0 @X0 0 ef ]
+"97
+[v _LCD_Init `(v ~T0 @X0 0 ef ]
 [s S1107 :3 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
 [n S1107 . T0PS PSA T0SE T0CS T08BIT TMR0ON ]
 [s S1108 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
@@ -24,8 +28,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _TMR1ON `Vb ~T0 @X0 0 e@32360 ]
 "17619
 [v _TMR0L `Vuc ~T0 @X0 0 e@4054 ]
-"66 utils.h
-[v _LCD_puts `(v ~T0 @X0 0 ef1`*uc ]
+"99 utils.h
+[v _LCD_Puts `(v ~T0 @X0 0 ef1`*uc ]
 "144 C:\Program Files (x86)\Microchip\xc8\v1.12\include\pic18.h
 [v __delay `(v ~T0 @X0 0 ef1`ul ]
 [p i __delay ]
@@ -69,16 +73,16 @@ Version 3.2 HI-TECH Software Intermediate Code
 [n S622 . . . . . . ]
 "9723 C:\Program Files (x86)\Microchip\xc8\v1.12\include\pic18f87k22.h
 [v _PORTHbits `VS622 ~T0 @X0 0 e@3975 ]
-"63 utils.h
+"114 utils.h
 [v _ADC_Read `(ui ~T0 @X0 0 ef ]
-"61
+"93
 [v _PWM_Duty `(v ~T0 @X0 0 ef1`ui ]
-"69
+"106
 [v _DisplayOnLcdPosition `(v ~T0 @X0 0 ef3`uc`uc`*uc ]
+"84
+[v _Delay_ms `(v ~T0 @X0 0 ef1`ui ]
 "28 C:\Program Files (x86)\Microchip\xc8\v1.12\include\math.h
 [v _round `(d ~T0 @X0 0 ef1`d ]
-"68 utils.h
-[v _affichage_chaine `(v ~T0 @X0 0 ef1`*uc ]
 [; ;pic18f87k22.h: 44: extern volatile unsigned char PMD3 @ 0xF16;
 "46 C:\Program Files (x86)\Microchip\xc8\v1.12\include\pic18f87k22.h
 [; ;pic18f87k22.h: 46: asm("PMD3 equ 0F16h");
@@ -9325,43 +9329,50 @@ Version 3.2 HI-TECH Software Intermediate Code
 [p x EBRT7=OFF ]
 "66
 [p x EBRTB=OFF ]
-"84
+"88
 [v _PWM_freq `l ~T0 @X0 1 e ]
 [i _PWM_freq
 -> -> 12000 `i `l
 ]
-[; ;device_config.h: 84: long PWM_freq = 12000;
-"85
+[; ;device_config.h: 88: long PWM_freq = 12000;
+"89
 [v _Tosc `l ~T0 @X0 1 e ]
 [i _Tosc
 / -> -> 1 `i `l -> 11059200 `l
 ]
-[; ;device_config.h: 85: long Tosc = (1 / 11059200);
-"90
+[; ;device_config.h: 89: long Tosc = (1 / 11059200);
+"94
 [v _CLAVIER `Fuc ~T0 @X0 1 e@1572864 ]
-[; ;device_config.h: 90: far unsigned char CLAVIER @ 0x180000;
-"91
+[; ;device_config.h: 94: far unsigned char CLAVIER @ 0x180000;
+"95
 [v _EEPROM `Fuc ~T0 @X0 1 e@256 ]
-[; ;device_config.h: 91: far unsigned char EEPROM @ 0x100;
-"93
-[v _LCD_DATA_PORT `Fuc ~T0 @X0 1 e@1703938 ]
-[; ;device_config.h: 93: far unsigned char LCD_DATA_PORT @ 0x1A0002;
+[; ;device_config.h: 95: far unsigned char EEPROM @ 0x100;
 "97
+[v _LCD_DATA_PORT `Fuc ~T0 @X0 1 e@1703938 ]
+[; ;device_config.h: 97: far unsigned char LCD_DATA_PORT @ 0x1A0002;
+"101
 [v _LCD_CTRL_PORT `Fuc ~T0 @X0 1 e@1703936 ]
-[; ;device_config.h: 97: far unsigned char LCD_CTRL_PORT @ 0x1A0000;
-"40 utils.h
+[; ;device_config.h: 101: far unsigned char LCD_CTRL_PORT @ 0x1A0000;
+[; ;utils.h: 62: typedef struct User{
+[; ;utils.h: 63: char UserId;
+[; ;utils.h: 64: char UserPsw;
+[; ;utils.h: 65: }User;
+"67 utils.h
+[v _usrTab `S1235 ~T0 @X0 -> 3 `i e ]
+[; ;utils.h: 67: User usrTab[3];
+"69
 [v _VAL_CLAV `uc ~T0 @X0 1 e ]
 [i _VAL_CLAV
 -> -> 0 `i `uc
 ]
-[v _cpt18TCY `uc ~T0 @X0 1 e ]
-[i _cpt18TCY
+[v _cpt1TCY `uc ~T0 @X0 1 e ]
+[i _cpt1TCY
 -> -> 0 `i `uc
 ]
 [v _RX_U_2 `uc ~T0 @X0 1 e ]
 [v _PWM_VAL `uc ~T0 @X0 1 e ]
-[; ;utils.h: 40: unsigned char VAL_CLAV = 0, cpt18TCY = 0, RX_U_2, PWM_VAL;
-"41
+[; ;utils.h: 69: unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL;
+"70
 [v _chaine_adc `uc ~T0 @X0 -> 100 `i e ]
 [v _chaine_clav `uc ~T0 @X0 -> 4 `i e ]
 [i _chaine_clav
@@ -9372,8 +9383,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 -> -> 0 `ui `uc
 ..
 ]
-[; ;utils.h: 41: char chaine_adc[100], chaine_clav[4] = {'0', '0', '0', '\0'};
-"42
+[; ;utils.h: 70: char chaine_adc[100], chaine_clav[4] = {'0', '0', '0', '\0'};
+"71
 [v _a `i ~T0 @X0 1 e ]
 [i _a
 -> 0 `i
@@ -9383,49 +9394,48 @@ Version 3.2 HI-TECH Software Intermediate Code
 -> 0 `i
 ]
 [v _adc_value `i ~T0 @X0 1 e ]
-[; ;utils.h: 42: int a = 0, PWM_clav = 0, adc_value;
-[; ;utils.h: 43: unsigned char RX_U_2;
-"44
+[; ;utils.h: 71: int a = 0, PWM_clav = 0, adc_value;
+[; ;utils.h: 72: unsigned char RX_U_2;
+"73
 [v _chaine_asser `uc ~T0 @X0 -> 16 `i e ]
-[; ;utils.h: 44: char chaine_asser[16];
-"45
-[v _iREAD `i ~T0 @X0 1 e ]
-[i _iREAD
--> 0 `i
-]
-[; ;utils.h: 45: int iREAD = 0;
-"46
+[; ;utils.h: 73: char chaine_asser[16];
+"74
 [v _count `Vi ~T0 @X0 1 e ]
 [i _count
 -> 0 `i
 ]
-[; ;utils.h: 46: volatile int count = 0;
-"47
+[; ;utils.h: 74: volatile int count = 0;
+"75
 [v _S_vent `i ~T0 @X0 1 e ]
 [i _S_vent
 -> 0 `i
 ]
-[; ;utils.h: 47: int S_vent = 0;
-[; ;utils.h: 55: void DelayFor18TCY(void);
-[; ;utils.h: 56: void DelayLCDLong(void);
-[; ;utils.h: 57: void DelayLCDShort(void);
-[; ;utils.h: 59: void Ports_init();
-[; ;utils.h: 60: void PWM_init();
-[; ;utils.h: 61: void PWM_Duty(unsigned int duty);
-[; ;utils.h: 62: void Timer_init();
-[; ;utils.h: 63: unsigned int ADC_Read();
-[; ;utils.h: 64: void PORT_init();
-[; ;utils.h: 65: void LCD_init();
-[; ;utils.h: 66: void LCD_puts(char chaine[]);
-[; ;utils.h: 67: void afficheur_write_clav();
-[; ;utils.h: 68: void affichage_chaine(char *chaine);
-[; ;utils.h: 69: void DisplayOnLcdPosition(char line, char row, char data[]);
-[; ;utils.h: 70: void send_1(char c);
-[; ;utils.h: 71: void send_msg(char *c);
-[; ;utils.h: 72: void interrupt interruptions(void);
-[; ;utils.h: 73: void UART_PrintByte(char c);
-[; ;utils.h: 74: void UART_PrintStr(char *c);
-[; ;utils.h: 75: void CLAVIER_read();
+[; ;utils.h: 75: int S_vent = 0;
+[; ;utils.h: 83: void DelayFor1TCY(void);
+[; ;utils.h: 84: void Delay_ms(unsigned int _tDelay);
+[; ;utils.h: 85: void Delay_us(unsigned int _tDelay);
+[; ;utils.h: 87: void Ports_Init();
+[; ;utils.h: 88: void PWM_Init();
+[; ;utils.h: 89: void Timer_Init();
+[; ;utils.h: 90: void PORT_Init();
+[; ;utils.h: 91: void Interrupt_Init(void);
+[; ;utils.h: 93: void PWM_Duty(unsigned int duty);
+[; ;utils.h: 95: void DelayLCDLong(void);
+[; ;utils.h: 96: void DelayLCDShort(void);
+[; ;utils.h: 97: void LCD_Init();
+[; ;utils.h: 98: void LCD_Putc(char car);
+[; ;utils.h: 99: void LCD_Puts(char chaine[]);
+[; ;utils.h: 100: void LCD_SetCursorAt(unsigned char _line,unsigned char _row);
+[; ;utils.h: 101: void LCD_Clear(void);
+[; ;utils.h: 102: void LCD_ReturnHome(void);
+[; ;utils.h: 103: void LCD_ShiftDisplay(char _direction,int _offset);
+[; ;utils.h: 105: void afficheur_write_clav();
+[; ;utils.h: 106: void DisplayOnLcdPosition(char line, char row, char data[]);
+[; ;utils.h: 107: void interrupt interruptions(void);
+[; ;utils.h: 109: void UART_Putc(char c);
+[; ;utils.h: 110: void UART_Puts(char c[]);
+[; ;utils.h: 112: char CLAVIER_GetPressedKey(void);
+[; ;utils.h: 114: unsigned int ADC_Read();
 "8 main.c
 [v _S_vent_string `uc ~T0 @X0 -> 10 `i e ]
 [; ;main.c: 8: char S_vent_string[10];
@@ -9443,7 +9453,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e ( _setup ..  ]
 [; ;main.c: 21: do {
 "21
-[e :U 1238 ]
+[e :U 1239 ]
 {
 [; ;main.c: 23: loop();
 "23
@@ -9451,11 +9461,11 @@ Version 3.2 HI-TECH Software Intermediate Code
 "24
 }
 [; ;main.c: 24: } while (1);
-[e $ != -> 1 `i -> 0 `i 1238  ]
-[e :U 1237 ]
+[e $ != -> 1 `i -> 0 `i 1239  ]
+[e :U 1238 ]
 [; ;main.c: 25: }
 "25
-[e :UE 1235 ]
+[e :UE 1236 ]
 }
 "28
 [v _setup `(v ~T0 @X0 1 ef ]
@@ -9463,210 +9473,213 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;main.c: 28: void setup(void) {
 [e :U _setup ]
 [f ]
-[; ;main.c: 29: Ports_init();
+[; ;main.c: 29: Ports_Init();
 "29
-[e ( _Ports_init ..  ]
-[; ;main.c: 30: PWM_init();
+[e ( _Ports_Init ..  ]
+[; ;main.c: 30: PWM_Init();
 "30
-[e ( _PWM_init ..  ]
-[; ;main.c: 31: Timer_init();
+[e ( _PWM_Init ..  ]
+[; ;main.c: 31: Timer_Init();
 "31
-[e ( _Timer_init ..  ]
-[; ;main.c: 32: LCD_init();
+[e ( _Timer_Init ..  ]
+[; ;main.c: 32: Interrupt_Init();
 "32
-[e ( _LCD_init ..  ]
-[; ;main.c: 34: T0CONbits.TMR0ON = 1;
-"34
-[e = . . _T0CONbits 0 5 -> -> 1 `i `uc ]
-[; ;main.c: 35: TMR1ON = 1;
+[e ( _Interrupt_Init ..  ]
+[; ;main.c: 33: LCD_Init();
+"33
+[e ( _LCD_Init ..  ]
+[; ;main.c: 35: T0CONbits.TMR0ON = 1;
 "35
-[e = _TMR1ON -> -> 1 `i `b ]
-[; ;main.c: 36: TMR0L = 1;
+[e = . . _T0CONbits 0 5 -> -> 1 `i `uc ]
+[; ;main.c: 36: TMR1ON = 1;
 "36
-[e = _TMR0L -> -> 1 `i `uc ]
-[; ;main.c: 37: LCD_puts("Init ok");
+[e = _TMR1ON -> -> 1 `i `b ]
+[; ;main.c: 37: TMR0L = 1;
 "37
-[e ( _LCD_puts (1 -> :s 1C `*uc ]
-[; ;main.c: 38: for(char i=0;i<200;i++){
+[e = _TMR0L -> -> 1 `i `uc ]
+[; ;main.c: 38: LCD_Puts("Init ok");
 "38
+[e ( _LCD_Puts (1 -> :s 1C `*uc ]
+[; ;main.c: 39: for(char i=0;i<200;i++){
+"39
 {
 [v _i `uc ~T0 @X0 1 a ]
 [e = _i -> -> 0 `i `uc ]
-[e $ < -> _i `i -> 200 `i 1240  ]
-[e $U 1241  ]
-[e :U 1240 ]
-{
-[; ;main.c: 39: _delay((unsigned long)((10)*(11059200/4000.0)));
-"39
-[e ( __delay (1 -> * -> -> 10 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-"40
-}
-"38
-[e ++ _i -> -> 1 `i `uc ]
-[e $ < -> _i `i -> 200 `i 1240  ]
+[e $ < -> _i `i -> 200 `i 1241  ]
+[e $U 1242  ]
 [e :U 1241 ]
+{
+[; ;main.c: 40: _delay((unsigned long)((10)*(11059200/4000.0)));
 "40
-}
-[; ;main.c: 40: }
-[; ;main.c: 41: }
+[e ( __delay (1 -> * -> -> 10 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
 "41
-[e :UE 1239 ]
 }
-"43
+"39
+[e ++ _i -> -> 1 `i `uc ]
+[e $ < -> _i `i -> 200 `i 1241  ]
+[e :U 1242 ]
+"41
+}
+[; ;main.c: 41: }
+[; ;main.c: 42: }
+"42
+[e :UE 1240 ]
+}
+"44
 [v _loop `(v ~T0 @X0 1 ef ]
 {
-[; ;main.c: 43: void loop(void) {
+[; ;main.c: 44: void loop(void) {
 [e :U _loop ]
 [f ]
-[; ;main.c: 51: if (TMR1IF == 1) {
-"51
-[e $ ! == -> _TMR1IF `i -> 1 `i 1244  ]
+[; ;main.c: 52: if (TMR1IF == 1) {
+"52
+[e $ ! == -> _TMR1IF `i -> 1 `i 1245  ]
 {
-[; ;main.c: 53: count++;
-"53
+[; ;main.c: 54: count++;
+"54
 [e ++ _count -> 1 `i ]
-[; ;main.c: 56: if (count == 2) {
-"56
-[e $ ! == _count -> 2 `i 1245  ]
+[; ;main.c: 57: if (count == 2) {
+"57
+[e $ ! == _count -> 2 `i 1246  ]
 {
-[; ;main.c: 58: LATDbits.LATD1 ^= 1;
-"58
+[; ;main.c: 59: LATDbits.LATD1 ^= 1;
+"59
 [e =^ . . _LATDbits 0 1 -> -> 1 `i `uc ]
-[; ;main.c: 60: S_vent = TMR0L;
-"60
+[; ;main.c: 61: S_vent = TMR0L;
+"61
 [e = _S_vent -> _TMR0L `i ]
-[; ;main.c: 63: TMR0L = 0;
-"63
+[; ;main.c: 64: TMR0L = 0;
+"64
 [e = _TMR0L -> -> 0 `i `uc ]
-[; ;main.c: 65: count = 00;
-"65
-[e = _count -> 0 `i ]
+[; ;main.c: 66: count = 00;
 "66
-}
-[e :U 1245 ]
-[; ;main.c: 66: }
-[; ;main.c: 68: TMR1IF = 0;
-"68
-[e = _TMR1IF -> -> 0 `i `b ]
-"69
-}
-[e :U 1244 ]
-[; ;main.c: 69: }
-[; ;main.c: 71: sprintf(S_vent_string, "%3dHz", S_vent);
-"71
-[e ( _sprintf (1 , (. , &U _S_vent_string :s 2C _S_vent ]
-[; ;main.c: 73: if (PORTHbits.RH4 == 1) {
-"73
-[e $ ! == -> . . _PORTHbits 0 4 `i -> 1 `i 1246  ]
-{
-[; ;main.c: 75: adc_value = ADC_Read();
-"75
-[e = _adc_value -> ( _ADC_Read ..  `i ]
-[; ;main.c: 76: PWM_Duty(adc_value);
-"76
-[e ( _PWM_Duty (1 -> _adc_value `ui ]
-[; ;main.c: 78: DisplayOnLcdPosition(1, 0, "Potar:");
-"78
-[e ( _DisplayOnLcdPosition (3 , , -> -> 1 `i `uc -> -> 0 `i `uc -> :s 3C `*uc ]
-[; ;main.c: 79: _delay((unsigned long)((20)*(11059200/4000.0)));
-"79
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-[; ;main.c: 81: DisplayOnLcdPosition(1, 6, chaine_adc);
-"81
-[e ( _DisplayOnLcdPosition (3 , , -> -> 1 `i `uc -> -> 6 `i `uc &U _chaine_adc ]
-[; ;main.c: 82: _delay((unsigned long)((20)*(11059200/4000.0)));
-"82
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-[; ;main.c: 83: DisplayOnLcdPosition(1, 9, "%");
-"83
-[e ( _DisplayOnLcdPosition (3 , , -> -> 1 `i `uc -> -> 9 `i `uc -> :s 4C `*uc ]
-[; ;main.c: 84: _delay((unsigned long)((20)*(11059200/4000.0)));
-"84
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-[; ;main.c: 85: DisplayOnLcdPosition(2, 11, S_vent_string);
-"85
-[e ( _DisplayOnLcdPosition (3 , , -> -> 2 `i `uc -> -> 11 `i `uc &U _S_vent_string ]
-[; ;main.c: 86: _delay((unsigned long)((20)*(11059200/4000.0)));
-"86
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-[; ;main.c: 87: DisplayOnLcdPosition(2, 0, "Code:");
-"87
-[e ( _DisplayOnLcdPosition (3 , , -> -> 2 `i `uc -> -> 0 `i `uc -> :s 5C `*uc ]
-[; ;main.c: 88: _delay((unsigned long)((20)*(11059200/4000.0)));
-"88
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-[; ;main.c: 89: DisplayOnLcdPosition(2, 6, chaine_clav);
-"89
-[e ( _DisplayOnLcdPosition (3 , , -> -> 2 `i `uc -> -> 6 `i `uc &U _chaine_clav ]
-[; ;main.c: 90: _delay((unsigned long)((20)*(11059200/4000.0)));
-"90
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-"92
+[e = _count -> 0 `i ]
+"67
 }
 [e :U 1246 ]
-[; ;main.c: 92: }
-[; ;main.c: 93: if (PORTHbits.RH4 == 0) {
-"93
-[e $ ! == -> . . _PORTHbits 0 4 `i -> 0 `i 1247  ]
-{
-"94
-[v _temp `f ~T0 @X0 1 a ]
-[; ;main.c: 94: float temp = ((chaine_clav[0] - 0x30)*100 + (chaine_clav[1] - 0x30)*10 + (chaine_clav[2] - 0x30))*10.23;
-[e = _temp -> * -> + + * - -> *U + &U _chaine_clav * -> -> -> 0 `i `ui `ux -> -> # *U &U _chaine_clav `ui `ux `i -> 48 `i -> 100 `i * - -> *U + &U _chaine_clav * -> -> -> 1 `i `ui `ux -> -> # *U &U _chaine_clav `ui `ux `i -> 48 `i -> 10 `i - -> *U + &U _chaine_clav * -> -> -> 2 `i `ui `ux -> -> # *U &U _chaine_clav `ui `ux `i -> 48 `i `d .10.23 `f ]
-[; ;main.c: 95: PWM_clav = (int) round(temp);
-"95
-[e = _PWM_clav -> ( _round (1 -> _temp `d `i ]
-[; ;main.c: 97: LCD_CTRL_PORT = 0x80;
-"97
-[e = _LCD_CTRL_PORT -> -> 128 `i `uc ]
-[; ;main.c: 98: _delay((unsigned long)((20)*(11059200/4000.0)));
-"98
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-[; ;main.c: 99: DisplayOnLcdPosition(1, 0, "Clav:");
-"99
-[e ( _DisplayOnLcdPosition (3 , , -> -> 1 `i `uc -> -> 0 `i `uc -> :s 6C `*uc ]
-[; ;main.c: 100: _delay((unsigned long)((20)*(11059200/4000.0)));
-"100
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-[; ;main.c: 101: if (VAL_CLAV != 0x0f) {
-"101
-[e $ ! != -> _VAL_CLAV `i -> 15 `i 1248  ]
-{
-[; ;main.c: 102: DisplayOnLcdPosition(1, 5, chaine_clav);
-"102
-[e ( _DisplayOnLcdPosition (3 , , -> -> 1 `i `uc -> -> 5 `i `uc &U _chaine_clav ]
-"103
+[; ;main.c: 67: }
+[; ;main.c: 69: TMR1IF = 0;
+"69
+[e = _TMR1IF -> -> 0 `i `b ]
+"70
 }
-[e :U 1248 ]
-[; ;main.c: 103: }
-[; ;main.c: 104: _delay((unsigned long)((20)*(11059200/4000.0)));
-"104
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-[; ;main.c: 105: affichage_chaine("%");
-"105
-[e ( _affichage_chaine (1 -> :s 7C `*uc ]
-[; ;main.c: 106: _delay((unsigned long)((20)*(11059200/4000.0)));
-"106
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-[; ;main.c: 108: _delay((unsigned long)((20)*(11059200/4000.0)));
-"108
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-[; ;main.c: 109: DisplayOnLcdPosition(2, 11, S_vent_string);
-"109
+[e :U 1245 ]
+[; ;main.c: 70: }
+[; ;main.c: 72: sprintf(S_vent_string, "%3dHz", S_vent);
+"72
+[e ( _sprintf (1 , (. , &U _S_vent_string :s 2C _S_vent ]
+[; ;main.c: 74: if (PORTHbits.RH4 == 1) {
+"74
+[e $ ! == -> . . _PORTHbits 0 4 `i -> 1 `i 1247  ]
+{
+[; ;main.c: 76: adc_value = ADC_Read();
+"76
+[e = _adc_value -> ( _ADC_Read ..  `i ]
+[; ;main.c: 77: PWM_Duty(adc_value);
+"77
+[e ( _PWM_Duty (1 -> _adc_value `ui ]
+[; ;main.c: 79: DisplayOnLcdPosition(1, 0, "Potar:");
+"79
+[e ( _DisplayOnLcdPosition (3 , , -> -> 1 `i `uc -> -> 0 `i `uc -> :s 3C `*uc ]
+[; ;main.c: 80: Delay_ms(20);
+"80
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+[; ;main.c: 82: DisplayOnLcdPosition(1, 6, chaine_adc);
+"82
+[e ( _DisplayOnLcdPosition (3 , , -> -> 1 `i `uc -> -> 6 `i `uc &U _chaine_adc ]
+[; ;main.c: 83: Delay_ms(20);
+"83
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+[; ;main.c: 84: DisplayOnLcdPosition(1, 9, "%");
+"84
+[e ( _DisplayOnLcdPosition (3 , , -> -> 1 `i `uc -> -> 9 `i `uc -> :s 4C `*uc ]
+[; ;main.c: 85: Delay_ms(20);
+"85
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+[; ;main.c: 86: DisplayOnLcdPosition(2, 11, S_vent_string);
+"86
 [e ( _DisplayOnLcdPosition (3 , , -> -> 2 `i `uc -> -> 11 `i `uc &U _S_vent_string ]
-[; ;main.c: 110: _delay((unsigned long)((20)*(11059200/4000.0)));
-"110
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 11059200 `l `d .4000.0 `ul ]
-[; ;main.c: 111: DisplayOnLcdPosition(2, 0, "Code:");
-"111
-[e ( _DisplayOnLcdPosition (3 , , -> -> 2 `i `uc -> -> 0 `i `uc -> :s 8C `*uc ]
-"113
+[; ;main.c: 87: Delay_ms(20);
+"87
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+[; ;main.c: 88: DisplayOnLcdPosition(2, 0, "Code:");
+"88
+[e ( _DisplayOnLcdPosition (3 , , -> -> 2 `i `uc -> -> 0 `i `uc -> :s 5C `*uc ]
+[; ;main.c: 89: Delay_ms(20);
+"89
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+[; ;main.c: 90: DisplayOnLcdPosition(2, 6, chaine_clav);
+"90
+[e ( _DisplayOnLcdPosition (3 , , -> -> 2 `i `uc -> -> 6 `i `uc &U _chaine_clav ]
+[; ;main.c: 91: Delay_ms(20);
+"91
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+"93
 }
 [e :U 1247 ]
-[; ;main.c: 113: }
-[; ;main.c: 132: }
-"132
-[e :UE 1243 ]
+[; ;main.c: 93: }
+[; ;main.c: 94: if (PORTHbits.RH4 == 0) {
+"94
+[e $ ! == -> . . _PORTHbits 0 4 `i -> 0 `i 1248  ]
+{
+"95
+[v _temp `f ~T0 @X0 1 a ]
+[; ;main.c: 95: float temp = ((chaine_clav[0] - 0x30)*100 + (chaine_clav[1] - 0x30)*10 + (chaine_clav[2] - 0x30))*10.23;
+[e = _temp -> * -> + + * - -> *U + &U _chaine_clav * -> -> -> 0 `i `ui `ux -> -> # *U &U _chaine_clav `ui `ux `i -> 48 `i -> 100 `i * - -> *U + &U _chaine_clav * -> -> -> 1 `i `ui `ux -> -> # *U &U _chaine_clav `ui `ux `i -> 48 `i -> 10 `i - -> *U + &U _chaine_clav * -> -> -> 2 `i `ui `ux -> -> # *U &U _chaine_clav `ui `ux `i -> 48 `i `d .10.23 `f ]
+[; ;main.c: 96: PWM_clav = (int) round(temp);
+"96
+[e = _PWM_clav -> ( _round (1 -> _temp `d `i ]
+[; ;main.c: 98: LCD_CTRL_PORT = 0x80;
+"98
+[e = _LCD_CTRL_PORT -> -> 128 `i `uc ]
+[; ;main.c: 99: Delay_ms(20);
+"99
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+[; ;main.c: 100: DisplayOnLcdPosition(1, 0, "Clav:");
+"100
+[e ( _DisplayOnLcdPosition (3 , , -> -> 1 `i `uc -> -> 0 `i `uc -> :s 6C `*uc ]
+[; ;main.c: 101: Delay_ms(20);
+"101
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+[; ;main.c: 102: if (VAL_CLAV != 0x0f) {
+"102
+[e $ ! != -> _VAL_CLAV `i -> 15 `i 1249  ]
+{
+[; ;main.c: 103: DisplayOnLcdPosition(1, 5, chaine_clav);
+"103
+[e ( _DisplayOnLcdPosition (3 , , -> -> 1 `i `uc -> -> 5 `i `uc &U _chaine_clav ]
+"104
+}
+[e :U 1249 ]
+[; ;main.c: 104: }
+[; ;main.c: 105: Delay_ms(20);
+"105
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+[; ;main.c: 106: LCD_Puts("%");
+"106
+[e ( _LCD_Puts (1 -> :s 7C `*uc ]
+[; ;main.c: 107: Delay_ms(20);
+"107
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+[; ;main.c: 109: Delay_ms(20);
+"109
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+[; ;main.c: 110: DisplayOnLcdPosition(2, 11, S_vent_string);
+"110
+[e ( _DisplayOnLcdPosition (3 , , -> -> 2 `i `uc -> -> 11 `i `uc &U _S_vent_string ]
+[; ;main.c: 111: Delay_ms(20);
+"111
+[e ( _Delay_ms (1 -> -> 20 `i `ui ]
+[; ;main.c: 112: DisplayOnLcdPosition(2, 0, "Code:");
+"112
+[e ( _DisplayOnLcdPosition (3 , , -> -> 2 `i `uc -> -> 0 `i `uc -> :s 8C `*uc ]
+"114
+}
+[e :U 1248 ]
+[; ;main.c: 114: }
+[; ;main.c: 133: }
+"133
+[e :UE 1244 ]
 }
 [p f _sprintf 8421504 ]
 [a 2C 37 51 100 72 122 0 ]

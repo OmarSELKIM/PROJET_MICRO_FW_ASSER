@@ -26,15 +26,16 @@ void main() {
 
 /*Fonctions*/
 void setup(void) {
-    Ports_init(); //Initialisation ports
-    PWM_init(); //Initialisation PWM
-    Timer_init(); //Initalisation timer1 (PWM)
-    LCD_init(); //Initialisation LCD
+    Ports_Init(); //Initialisation ports
+    PWM_Init(); //Initialisation PWM
+    Timer_Init(); //Initalisation timer1 (PWM)
+    Interrupt_Init();
+    LCD_Init(); //Initialisation LCD
 
     T0CONbits.TMR0ON = 1; //Switch On Timer-0
     TMR1ON = 1;
     TMR0L = 1; //reset timer 0 pour PWM
-    LCD_puts("Init ok");
+    LCD_Puts("Init ok");
     for(char i=0;i<200;i++){
         __delay_ms(10);
     }
@@ -76,18 +77,18 @@ void loop(void) {
         PWM_Duty(adc_value); //Applique la valeur potar au Ventilateur en PWM
 
         DisplayOnLcdPosition(1, 0, "Potar:");
-        __delay_ms(20);
+        Delay_ms(20);
         // affichage_chaine(chaine_adc); //affiche LCD valeur PWM
         DisplayOnLcdPosition(1, 6, chaine_adc);
-        __delay_ms(20);
+        Delay_ms(20);
         DisplayOnLcdPosition(1, 9, "%");
-        __delay_ms(20);
+        Delay_ms(20);
         DisplayOnLcdPosition(2, 11, S_vent_string);
-        __delay_ms(20);
+        Delay_ms(20);
         DisplayOnLcdPosition(2, 0, "Code:");
-        __delay_ms(20);
+        Delay_ms(20);
         DisplayOnLcdPosition(2, 6, chaine_clav);
-        __delay_ms(20);
+        Delay_ms(20);
 
     }
     if (SWI_1 == 0) {
@@ -95,19 +96,19 @@ void loop(void) {
         PWM_clav = (int) round(temp);
 
         LCD_CTRL_PORT = 0x80; // Force 1ere ligne
-        __delay_ms(20);
+        Delay_ms(20);
         DisplayOnLcdPosition(1, 0, "Clav:");
-        __delay_ms(20);
+        Delay_ms(20);
         if (VAL_CLAV != 0x0f) {
             DisplayOnLcdPosition(1, 5, chaine_clav);
         }
-        __delay_ms(20);
+        Delay_ms(20);
         LCD_Puts("%");
-        __delay_ms(20);
+        Delay_ms(20);
         // DisplayOnLcdPosition(2, 7, "Asser:");
-        __delay_ms(20);
+        Delay_ms(20);
         DisplayOnLcdPosition(2, 11, S_vent_string);
-        __delay_ms(20);
+        Delay_ms(20);
         DisplayOnLcdPosition(2, 0, "Code:");
 
     }

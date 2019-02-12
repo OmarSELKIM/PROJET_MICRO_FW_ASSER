@@ -12078,7 +12078,7 @@ extern char * ftoa(float f, int * status);
 #pragma config CONFIG7L = 0xFF
 #pragma config CONFIG7H = 0x40
 
-# 84
+# 88
 long PWM_freq = 12000;
 long Tosc = (1 / 11059200);
 
@@ -12090,73 +12090,90 @@ far unsigned char EEPROM @ 0x100;
 
 far unsigned char LCD_DATA_PORT @ 0x1A0002;
 
-# 97
+# 101
 far unsigned char LCD_CTRL_PORT @ 0x1A0000;
 
-# 40 "utils.h"
-unsigned char VAL_CLAV = 0, cpt18TCY = 0, RX_U_2, PWM_VAL;
+# 62 "utils.h"
+typedef struct User{
+char UserId;
+char UserPsw;
+}User;
+
+User usrTab[3];
+
+unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL;
 char chaine_adc[100], chaine_clav[4] = {'0', '0', '0', '\0'};
 int a = 0, PWM_clav = 0, adc_value;
 unsigned char RX_U_2;
 char chaine_asser[16];
-int iREAD = 0;
 volatile int count = 0;
 int S_vent = 0;
 
-# 55
-void DelayFor18TCY(void);
+# 83
+void DelayFor1TCY(void);
+void Delay_ms(unsigned int _tDelay);
+void Delay_us(unsigned int _tDelay);
+
+void Ports_Init();
+void PWM_Init();
+void Timer_Init();
+void PORT_Init();
+void Interrupt_Init(void);
+
+void PWM_Duty(unsigned int duty);
+
 void DelayLCDLong(void);
 void DelayLCDShort(void);
+void LCD_Init();
+void LCD_Putc(char car);
+void LCD_Puts(char chaine[]);
+void LCD_SetCursorAt(unsigned char _line,unsigned char _row);
+void LCD_Clear(void);
+void LCD_ReturnHome(void);
+void LCD_ShiftDisplay(char _direction,int _offset);
 
-void Ports_init();
-void PWM_init();
-void PWM_Duty(unsigned int duty);
-void Timer_init();
-unsigned int ADC_Read();
-void PORT_init();
-void LCD_init();
-void LCD_puts(char chaine[]);
 void afficheur_write_clav();
-void affichage_chaine(char *chaine);
 void DisplayOnLcdPosition(char line, char row, char data[]);
-void send_1(char c);
-void send_msg(char *c);
 void interrupt interruptions(void);
-void UART_PrintByte(char c);
-void UART_PrintStr(char *c);
-void CLAVIER_read();
+
+void UART_Putc(char c);
+void UART_Puts(char c[]);
+
+char CLAVIER_GetPressedKey(void);
+
+unsigned int ADC_Read();
 
 # 9 "utils.c"
-void DelayFor18TCY(void) {
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
-cpt18TCY++;
+void DelayFor1TCY(void) {
+cpt1TCY++;
 }
 
-void DelayLCDLong(void) {
-_delay((unsigned long)((5)*(11059200/4000.0)));
+void Delay_ms(unsigned int _tDelay){
+for(unsigned int i=_tDelay;i>=0;i--){
+_delay((unsigned long)((1)*(11059200/4000.0)));
+}
 }
 
-void DelayLCDShort(void) {
-_delay((unsigned long)((50)*(11059200/4000000.0)));
+void Delay_us(unsigned int _tDelay){
+for(unsigned int i=_tDelay;i>=0;i--){
+_delay((unsigned long)((1)*(11059200/4000000.0)));
+}
 }
 
-void Ports_init() {
+void Interrupt_Init(void) {
+INTCON2 = 0b01111001;
+INTCON = 0b11001001;
+INTCONbits.INT0IE = 1;
+INTCONbits.GIE = 1;
+INTCONbits.INT0IF = 0;
+RCONbits.IPEN = 1;
+PIE1bits.ADIE = 1;
+IPR1bits.ADIP = 1;
+PIR1bits.ADIF = 0;
+INTCON3 = 0b01001001;
+}
+
+void Ports_Init() {
 
 INTCON = 0b11010000;
 
@@ -12204,7 +12221,7 @@ TMR0L = 0;
 _delay((unsigned long)((50)*(11059200/4000.0)));
 }
 
-void PWM_init() {
+void PWM_Init() {
 PR2 = (11059200 / (PWM_freq * 4 * 16)) - 1;
 CCP1M3 = 1;
 CCP1M2 = 1;
@@ -12225,7 +12242,7 @@ CCPR1L = duty >> 2;
 }
 }
 
-void Timer_init() {
+void Timer_Init() {
 
 T1CON = 0b01101001;
 
@@ -12237,33 +12254,7 @@ INTCONbits.GIE = 1;
 
 }
 
-unsigned int ADC_Read() {
-
-unsigned long pot;
-unsigned long pot_value;
-int valeur_pwm;
-
-ADCON0bits.GO = 1;
-
-while (ADCON0bits.GO);
-
-if (ADRES > 0xB33) {
-LATGbits.LATG0 = 1;
-} else {
-LATGbits.LATG0 = 0;
-}
-
-
-
-pot = ADRES;
-pot_value = pot * 1023 / 4095;
-valeur_pwm = pot_value * 100 / 1023;
-PWM_VAL = (char) (valeur_pwm);
-sprintf(chaine_adc, "%3d", pot_value * 100 / 1023);
-return pot_value;
-}
-
-void PORT_init() {
+void PORT_Init() {
 
 INTCON = 0b11010000;
 
@@ -12278,7 +12269,7 @@ TRISD = 0x00;
 TRISH = 0xFF;
 TRISG = 0xFF;
 
-# 165
+# 139
 TRISCbits.TRISC6 = 0;
 TRISCbits.TRISC7 = 1;
 TXSTA1bits.SYNC = 0;
@@ -12295,11 +12286,19 @@ BAUDCON1bits.BRG16 = 0;
 TXSTA1bits.BRGH = 0;
 SPBRG1 = 17;
 
-# 190
+# 164
 _delay((unsigned long)((50)*(11059200/4000.0)));
 }
 
-void LCD_init() {
+void DelayLCDLong(void) {
+_delay((unsigned long)((5)*(11059200/4000.0)));
+}
+
+void DelayLCDShort(void) {
+_delay((unsigned long)((50)*(11059200/4000000.0)));
+}
+
+void LCD_Init() {
 
 
 
@@ -12347,11 +12346,46 @@ LCD_CTRL_PORT = 0x80;
 _delay((unsigned long)((50)*(11059200/4000.0)));
 }
 
-void LCD_puts(char chaine[]) {
+void LCD_Putc(char car) {
+LCD_DATA_PORT = car;
+DelayLCDShort();
+}
+
+void LCD_Puts(char chaine[]) {
 unsigned char i = 0;
-while (chaine[i] != 0) {
+while (chaine[i] != '\0') {
 LCD_DATA_PORT = chaine[i];
 i++;
+DelayLCDShort();
+}
+}
+
+void LCD_SetCursorAt(unsigned char _line, unsigned char _row) {
+if (_line == 1) {
+LCD_CTRL_PORT = (0x80) | ((_row) & 0x0f);
+} else {
+LCD_CTRL_PORT = (0xC0) | ((_row) & 0x0f);
+}
+DelayLCDShort();
+}
+
+void LCD_Clear(void) {
+LCD_CTRL_PORT = 0x01;
+DelayLCDLong();
+}
+
+void LCD_ReturnHome(void) {
+LCD_CTRL_PORT = 0x02;
+DelayLCDLong();
+}
+
+void LCD_ShiftDisplay(char _direction, int _offset) {
+for (char i = 0; i <= _offset; i++) {
+if (_direction == 0x01) {
+LCD_CTRL_PORT = 0x07;
+} else {
+LCD_CTRL_PORT = 0x05;
+}
 DelayLCDShort();
 }
 }
@@ -12361,15 +12395,6 @@ LCD_DATA_PORT = VAL_CLAV + 0x30;
 _delay((unsigned long)((50)*(11059200/4000.0)));
 }
 
-void affichage_chaine(char *chaine) {
-unsigned char i = 0;
-while (chaine[i] != '\0') {
-LCD_DATA_PORT = chaine[i];
-i++;
-_delay((unsigned long)((20)*(11059200/4000.0)));
-}
-}
-
 void DisplayOnLcdPosition(char line, char row, char data[]) {
 
 if (line == 1)
@@ -12377,22 +12402,8 @@ LCD_CTRL_PORT = (0x80) | ((row) & 0x0f);
 else
 LCD_CTRL_PORT = (0xC0) | ((row) & 0x0f);
 _delay((unsigned long)((20)*(11059200/4000.0)));
-affichage_chaine(data);
+LCD_Puts(data);
 _delay((unsigned long)((20)*(11059200/4000.0)));
-}
-
-void send_1(char c) {
-
-while (TXSTA1bits.TRMT == 0);
-TXREG1 = c;
-
-}
-
-void send_msg(char *c) {
-for (int i = 0; i < 14; i++) {
-while (TXSTA1bits.TRMT == 0);
-TXREG1 = c[i];
-}
 }
 
 void interrupt interruptions(void) {
@@ -12406,13 +12417,13 @@ DisplayOnLcdPosition(1, 10, "yes");
 }
 }
 RX_U_2 = RCREG2;
-send_1(RX_U_2);
+UART_Putc(RX_U_2);
 }
 
 if (INT0IF)
 {
 INT0IF = 0;
-CLAVIER_read();
+CLAVIER_GetPressedKey();
 
 
 switch (VAL_CLAV) {
@@ -12435,7 +12446,7 @@ case 0x0f:
 
 
 
-send_1(0x14);
+UART_Putc(0x14);
 
 
 if (PORTHbits.RH4 == 1) {
@@ -12443,17 +12454,17 @@ if (PORTHbits.RH4 == 1) {
 }
 if (PORTHbits.RH4 == 0) {
 
-send_msg("PWM Clav:");
+UART_Puts("PWM Clav:");
 _delay((unsigned long)((20)*(11059200/4000.0)));
-send_msg(chaine_clav);
+UART_Puts(chaine_clav);
 _delay((unsigned long)((20)*(11059200/4000.0)));
-send_msg("%");
+UART_Putc('%');
 _delay((unsigned long)((20)*(11059200/4000.0)));
 PWM_Duty(PWM_clav);
 }
 _delay((unsigned long)((20)*(11059200/4000.0)));
-send_1(0x0A);
-send_1(0x0D);
+UART_Putc(0x0A);
+UART_Putc(0x0D);
 _delay((unsigned long)((50)*(11059200/4000.0)));
 break;
 default:
@@ -12464,27 +12475,46 @@ break;
 }
 }
 
-void UART_PrintByte(char c) {
-
+void UART_Putc(char c) {
 while (TXSTA1bits.TRMT == 0);
 TXREG1 = c;
-
 }
 
-void UART_PrintStr(char *c) {
+void UART_Puts(char c[]) {
 for (int i = 0; i < 14; i++) {
 while (TXSTA1bits.TRMT == 0);
-TXREG1 = c[i];
+UART_Putc(c[i]);
 }
 }
 
-void CLAVIER_read() {
-VAL_CLAV = CLAVIER & 0x0f;
-if (iREAD == 3) {
-iREAD = 0;
-}
-chaine_clav[iREAD] = VAL_CLAV + 0x30;
-iREAD++;
-
+char CLAVIER_GetPressedKey(void) {
+char _val = 0x00;
+_val = CLAVIER & 0x0f;
+return _val;
 }
 
+unsigned int ADC_Read() {
+
+unsigned long pot;
+unsigned long pot_value;
+int valeur_pwm;
+
+ADCON0bits.GO = 1;
+
+while (ADCON0bits.GO);
+
+if (ADRES > 0xB33) {
+LATGbits.LATG0 = 1;
+} else {
+LATGbits.LATG0 = 0;
+}
+
+
+
+pot = ADRES;
+pot_value = pot * 1023 / 4095;
+valeur_pwm = pot_value * 100 / 1023;
+PWM_VAL = (char) (valeur_pwm);
+sprintf(chaine_adc, "%3d", pot_value * 100 / 1023);
+return pot_value;
+}
