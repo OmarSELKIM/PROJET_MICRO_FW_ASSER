@@ -9434,7 +9434,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;utils.h: 107: void interrupt interruptions(void);
 [; ;utils.h: 109: void UART_Putc(char c);
 [; ;utils.h: 110: void UART_Puts(char c[]);
-[; ;utils.h: 112: char CLAVIER_GetPressedKey(void);
+[; ;utils.h: 112: char CLAVIER_GetKey(void);
 [; ;utils.h: 114: unsigned int ADC_Read();
 "8 main.c
 [v _S_vent_string `uc ~T0 @X0 -> 10 `i e ]

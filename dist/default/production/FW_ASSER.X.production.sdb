@@ -856,43 +856,43 @@
 [v _Timer_Init `(v  1 e 0 0 ]
 "119
 [v _PORT_Init `(v  1 e 0 0 ]
-"167
+"168
 [v _DelayLCDLong `(v  1 e 0 0 ]
-"171
+"172
 [v _DelayLCDShort `(v  1 e 0 0 ]
 [v i2_DelayLCDShort `(v  1 e 0 0 ]
 [v i2_DelayLCDShort `(v  1 e 0 0 ]
-"175
+"176
 [v _LCD_Init `(v  1 e 0 0 ]
-"223
+"224
 [v _LCD_Putc `(v  1 e 0 0 ]
-"228
+"229
 [v _LCD_Puts `(v  1 e 0 0 ]
 [v i2_LCD_Puts `(v  1 e 0 0 ]
 [v i2_LCD_Puts `(v  1 e 0 0 ]
-"237
+"238
 [v _LCD_SetCursorAt `(v  1 e 0 0 ]
-"246
+"247
 [v _LCD_Clear `(v  1 e 0 0 ]
-"251
+"252
 [v _LCD_ReturnHome `(v  1 e 0 0 ]
-"256
+"257
 [v _LCD_ShiftDisplay `(v  1 e 0 0 ]
-"267
+"268
 [v _afficheur_write_clav `(v  1 e 0 0 ]
-"272
+"273
 [v _DisplayOnLcdPosition `(v  1 e 0 0 ]
 [v i2_DisplayOnLcdPosition `(v  1 e 0 0 ]
 [v i2_DisplayOnLcdPosition `(v  1 e 0 0 ]
-"283
+"284
 [v _interruptions `II(v  1 e 0 0 ]
-"352
+"353
 [v _UART_Putc `(v  1 e 0 0 ]
-"357
+"358
 [v _UART_Puts `(v  1 e 0 0 ]
-"364
-[v _CLAVIER_GetPressedKey `(uc  1 e 1 0 ]
-"370
+"365
+[v _CLAVIER_GetKey `(uc  1 e 1 0 ]
+"372
 [v _ADC_Read `(ui  1 e 2 0 ]
 "685 C:\Program Files (x86)\Microchip\xc8\v1.12\include\pic18f87k22.h
 [v _RCREG2 `VEuc  1 e 1 @3869 ]
@@ -1559,21 +1559,21 @@
 {
 "36
 } 0
-"175
+"176
 [v _LCD_Init `(v  1 e 0 0 ]
 {
-"221
+"222
 } 0
-"370
+"372
 [v _ADC_Read `(ui  1 e 2 0 ]
 {
-"373
+"375
 [v ADC_Read@pot_value `ul  1 a 4 57 ]
-"372
-[v ADC_Read@pot `ul  1 a 4 51 ]
 "374
+[v ADC_Read@pot `ul  1 a 4 51 ]
+"376
 [v ADC_Read@valeur_pwm `i  1 a 2 55 ]
-"394
+"396
 } 0
 "493 C:\Program Files (x86)\Microchip\xc8\v1.12\sources\doprnt.c
 [v _sprintf `(i  1 e 2 0 ]
@@ -1603,22 +1603,22 @@
 [v PWM_Duty@duty `ui  1 p 2 62 ]
 "105
 } 0
-"272
+"273
 [v _DisplayOnLcdPosition `(v  1 e 0 0 ]
 {
 [v DisplayOnLcdPosition@line `uc  1 p 1 6 ]
 [v DisplayOnLcdPosition@row `uc  1 p 1 7 ]
 [v DisplayOnLcdPosition@data `*.suc  1 p 2 8 ]
-"281
+"282
 } 0
-"228
+"229
 [v _LCD_Puts `(v  1 e 0 0 ]
 {
-"229
+"230
 [v LCD_Puts@i `uc  1 a 1 5 ]
-"228
+"229
 [v LCD_Puts@chaine `*.suc  1 p 2 0 ]
-"235
+"236
 } 0
 "13
 [v _Delay_ms `(v  1 e 0 0 ]
@@ -1638,10 +1638,10 @@
 [v round@x `d  1 p 3 92 ]
 "13
 } 0
-"171 utils.c
+"172 utils.c
 [v _DelayLCDShort `(v  1 e 0 0 ]
 {
-"173
+"174
 } 0
 "13 C:\Program Files (x86)\Microchip\xc8\v1.12\sources\isdigit.c
 [v _isdigit `(b  1 e 0 0 ]
@@ -1832,32 +1832,32 @@
 [v ___altoft@c `l  1 p 4 15 ]
 "57
 } 0
-"283 utils.c
+"284 utils.c
 [v _interruptions `II(v  1 e 0 0 ]
 {
-"350
+"351
 } 0
-"364
-[v _CLAVIER_GetPressedKey `(uc  1 e 1 0 ]
-{
 "365
-[v CLAVIER_GetPressedKey@_val `uc  1 a 1 1 ]
-"368
+[v _CLAVIER_GetKey `(uc  1 e 1 0 ]
+{
+"367
+[v CLAVIER_GetKey@_val `uc  1 a 1 1 ]
+"370
 } 0
-"357
+"358
 [v _UART_Puts `(v  1 e 0 0 ]
 {
-"358
+"359
 [v UART_Puts@i `i  1 a 2 5 ]
-"357
+"358
 [v UART_Puts@c `*.suc  1 p 2 1 ]
-"362
+"363
 } 0
-"352
+"353
 [v _UART_Putc `(v  1 e 0 0 ]
 {
 [v UART_Putc@c `uc  1 p 1 0 ]
-"355
+"356
 } 0
 "97
 [v i2_PWM_Duty `(v  1 e 0 0 ]
@@ -1865,25 +1865,25 @@
 [v i2PWM_Duty@duty `ui  1 p 2 69 ]
 "105
 } 0
-"272
+"273
 [v i2_DisplayOnLcdPosition `(v  1 e 0 0 ]
 {
 [v i2DisplayOnLcdPosition@line `uc  1 p 1 6 ]
 [v i2DisplayOnLcdPosition@row `uc  1 p 1 7 ]
 [v i2DisplayOnLcdPosition@data `*.suc  1 p 2 8 ]
-"281
+"282
 } 0
-"228
+"229
 [v i2_LCD_Puts `(v  1 e 0 0 ]
 {
 [v i2LCD_Puts@i `uc  1 a 1 5 ]
 [v i2LCD_Puts@chaine `*.suc  1 p 2 0 ]
-"235
+"236
 } 0
-"171
+"172
 [v i2_DelayLCDShort `(v  1 e 0 0 ]
 {
-"173
+"174
 } 0
 "10 C:\Program Files (x86)\Microchip\xc8\v1.12\sources\aldiv.c
 [v i2___aldiv `(l  1 e 4 0 ]

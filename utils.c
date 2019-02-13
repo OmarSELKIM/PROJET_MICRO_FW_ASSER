@@ -164,6 +164,7 @@ void PORT_Init() {
     __delay_ms(50);
 }
 
+
 void DelayLCDLong(void) {
     __delay_ms(5);
 }
@@ -297,7 +298,7 @@ void interrupt interruptions(void) {
     if (INT0IF) // flag 1
     {
         INT0IF = 0; // Reset the external interrupt flag
-        CLAVIER_GetPressedKey();
+        CLAVIER_GetKey();
         //LCD_CTRL_PORT = 0x14; //déplace le curseur à droite
         //LCD_CTRL_PORT = 0x10; //déplace le curseur à gauche
         switch (VAL_CLAV) {
@@ -361,7 +362,8 @@ void UART_Puts(char c[]) {
     }
 }
 
-byte CLAVIER_GetPressedKey(void) {
+byte CLAVIER_GetKey(void) {
+
     byte _val = 0x00;
     _val = CLAVIER & 0x0f;
     return _val;
