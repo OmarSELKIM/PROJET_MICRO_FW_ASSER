@@ -887,7 +887,7 @@
 "345
 [v _UART_Puts `(v  1 e 0 0 ]
 "352
-[v _CLAVIER_GetPressedKey `(uc  1 e 1 0 ]
+[v _CLAVIER_GetKey `(uc  1 e 1 0 ]
 "358
 [v _ADC_Read `(ui  1 e 2 0 ]
 "685 C:\Program Files (x86)\Microchip\xc8\v1.12\include\pic18f87k22.h
@@ -1825,10 +1825,10 @@
 "338
 } 0
 "352
-[v _CLAVIER_GetPressedKey `(uc  1 e 1 0 ]
+[v _CLAVIER_GetKey `(uc  1 e 1 0 ]
 {
 "353
-[v CLAVIER_GetPressedKey@_val `uc  1 a 1 1 ]
+[v CLAVIER_GetKey@_val `uc  1 a 1 1 ]
 "356
 } 0
 "345

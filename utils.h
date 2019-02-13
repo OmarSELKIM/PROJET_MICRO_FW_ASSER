@@ -107,7 +107,7 @@ void interrupt interruptions(void);
 void UART_Putc(char c);
 void UART_Puts(char c[]);
 
-byte CLAVIER_GetPressedKey(void);
+byte CLAVIER_GetKey(void);
 
 unsigned int ADC_Read();
 

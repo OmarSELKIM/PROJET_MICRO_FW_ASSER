@@ -84,7 +84,6 @@ i2_DisplayOnLcdPosition 3CA0 0 CODE 0
 __size_of_DelayLCDShort 0 0 ABS 0
 _loop$2523 C9 0 BANK0 1
 __end_of_Timer_Init 3EF4 0 CODE 0
-__size_of_CLAVIER_GetPressedKey 0 0 ABS 0
 ?___lwmod 68 0 BANK0 1
 __size_ofi2_PWM_Duty 0 0 ABS 0
 ___ftdiv@f3 79 0 BANK0 1
@@ -249,6 +248,7 @@ __pcstackBANK0 60 0 BANK0 1
 __Htemp 0 0 COMRAM 1
 __Ltemp 0 0 COMRAM 1
 __Hrbit 0 0 COMRAM 1
+_CLAVIER_GetKey 3E90 0 CODE 0
 __Lrbit 0 0 COMRAM 1
 i2___ftdiv@sign 34 0 COMRAM 1
 ___lmul 3650 0 CODE 0
@@ -289,7 +289,6 @@ ___lmul@multiplicand 64 0 BANK0 1
 ?___asftadd B7 0 BANK0 1
 ___wmul@multiplicand 62 0 BANK0 1
 __size_of_Ports_Init 0 0 ABS 0
-_CLAVIER_GetPressedKey 3E90 0 CODE 0
 _OSCCON2 F64 0 ABS 0
 _T2CKPS0 7E50 0 ABS 0
 _INTCON2 FF1 0 ABS 0
@@ -318,6 +317,7 @@ __end_of___asftadd 3DE0 0 CODE 0
 ?___altoft 6F 0 BANK0 1
 _chaine_clav F8 0 BANK0 1
 i2___ftdiv 2E72 0 CODE 0
+__size_of_CLAVIER_GetKey 0 0 ABS 0
 ?___awtoft 68 0 BANK0 1
 ?_LCD_Puts 60 0 BANK0 1
 _RTCVALH F5D 0 ABS 0
@@ -411,7 +411,6 @@ __Hclrtext 0 0 ABS 0
 __Lclrtext 0 0 ABS 0
 __end_ofi2___ftpack 3278 0 CODE 0
 i2___ftpack 318A 0 CODE 0
-__end_of_CLAVIER_GetPressedKey 3EB0 0 CODE 0
 _LCD_CTRL_PORT 1A0000 0 ABS 0
 __end_of_UART_Putc 3EDC 0 CODE 0
 __end_of_UART_Puts 3A5E 0 CODE 0
@@ -422,6 +421,7 @@ _rtccTimeInitialized 5E 0 COMRAM 1
 __end_of___lwdiv 34EC 0 CODE 0
 i2___fttol@exp1 1E 0 COMRAM 1
 i2___ftdiv@f3 30 0 COMRAM 1
+CLAVIER_GetKey@_val 2 0 COMRAM 1
 __end_of_frexp 3650 0 CODE 0
 ___ftadd 1970 0 CODE 0
 ?i2___altoft 1F 0 COMRAM 1
@@ -475,6 +475,7 @@ __mediumconst 0 0 MEDIUMCONST 0
 ___lwdiv 342C 0 CODE 0
 __size_ofi2___aldiv 0 0 ABS 0
 __size_of_main 0 0 ABS 0
+__end_of_CLAVIER_GetKey 3EB0 0 CODE 0
 i2___ftpack@arg 1 0 COMRAM 1
 _dpowers 100C 0 SMALLCONST 0
 __CFG_EBRTB$OFF 0 0 ABS 0
@@ -754,7 +755,6 @@ PWM_Duty@duty 9E 0 BANK0 1
 ?i2___ftpack 1 0 COMRAM 1
 __initialization 3DE0 0 CODE 0
 __size_ofi2_DisplayOnLcdPosition 0 0 ABS 0
-CLAVIER_GetPressedKey@_val 2 0 COMRAM 1
 ___lwmod@dividend 68 0 BANK0 1
 sprintf@_val 89 0 BANK0 1
 __activetblptr 3 0 ABS 0
@@ -785,7 +785,7 @@ bssBANK1 101 1A1 BANK1 101 1
 text2 1082 3F0B CODE 1082 0
 %locals
 dist/default/production\FW_ASSER.X.production.obj
-C:\Users\L029038\AppData\Local\Temp\s3p8k.
+C:\Users\L029038\AppData\Local\Temp\s29ek.
 mcc_generated_files/device_config.h
 88 3EF4 0 CODE 0
 utils.h

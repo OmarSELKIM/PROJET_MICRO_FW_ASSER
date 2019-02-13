@@ -25,7 +25,6 @@ ___asftadd: CODE, 15770 0 70
 i2___ftmul: CODE, 10674 0 318
 ___lmul: CODE, 13904 0 168
 i2___ftpack: CODE, 12682 0 238
-_CLAVIER_GetPressedKey: CODE, 16016 0 32
 _UART_Putc: CODE, 16076 0 16
 _UART_Puts: CODE, 14814 0 128
 _Interrupt_Init: CODE, 16048 0 28
@@ -34,6 +33,7 @@ ___lwdiv: CODE, 13356 0 192
 _frexp: CODE, 13728 0 176
 ___lldiv: CODE, 11602 0 288
 i2___aldiv: CODE, 12176 0 260
+_CLAVIER_GetKey: CODE, 16016 0 32
 i2___altoft: CODE, 14536 0 148
 _isdigit: CODE, 15696 0 74
 _sprintf: CODE, 5468 0 1044

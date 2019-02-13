@@ -12137,7 +12137,7 @@ void interrupt interruptions(void);
 void UART_Putc(char c);
 void UART_Puts(char c[]);
 
-char CLAVIER_GetPressedKey(void);
+char CLAVIER_GetKey(void);
 
 unsigned int ADC_Read();
 
@@ -12409,7 +12409,7 @@ UART_Putc(RX_U_2);
 if (INT0IF)
 {
 INT0IF = 0;
-CLAVIER_GetPressedKey();
+CLAVIER_GetKey();
 
 
 switch (VAL_CLAV) {
@@ -12473,7 +12473,7 @@ UART_Putc(c[i]);
 }
 }
 
-char CLAVIER_GetPressedKey(void) {
+char CLAVIER_GetKey(void) {
 char _val = 0x00;
 _val = CLAVIER & 0x0f;
 return _val;

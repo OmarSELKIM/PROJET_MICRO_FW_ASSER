@@ -12137,7 +12137,7 @@ void interrupt interruptions(void);
 void UART_Putc(char c);
 void UART_Puts(char c[]);
 
-char CLAVIER_GetPressedKey(void);
+char CLAVIER_GetKey(void);
 
 unsigned int ADC_Read();
 

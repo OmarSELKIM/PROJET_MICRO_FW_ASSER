@@ -24,7 +24,7 @@ Linker command line:
   -pfarbss=FARRAM,fardata=FARRAM \
   -pintsave_regs=BIGRAM,bigbss=BIGRAM,bigdata=BIGRAM -pbss=RAM \
   -pidata=CODE,irdata=CODE,ibigdata=CODE,ifardata=CODE \
-  C:\Users\L029038\AppData\Local\Temp\s3p8k.obj \
+  C:\Users\L029038\AppData\Local\Temp\s29ek.obj \
   dist/default/production\FW_ASSER.X.production.obj 
 
 Object code version is 3.10
@@ -37,7 +37,7 @@ Call graph: (short form)
 
 
                 Name                               Link     Load   Length Selector   Space Scale
-C:\Users\L029038\AppData\Local\Temp\s3p8k.obj
+C:\Users\L029038\AppData\Local\Temp\s29ek.obj
                 end_init                            24E      24E        4        4       0
                 reset_vec                             0        0        4        0       0
                 idloc                            200000   200000        8   200000       0
@@ -319,7 +319,7 @@ UNUSED ADDRESS RANGES
 ADC_Read@pot                     cstackBANK0  000093
 ADC_Read@pot_value               cstackBANK0  000099
 ADC_Read@valeur_pwm              cstackBANK0  000097
-CLAVIER_GetPressedKey@_val       cstackCOMRAM 000002
+CLAVIER_GetKey@_val              cstackCOMRAM 000002
 DisplayOnLcdPosition@data        cstackBANK0  000068
 DisplayOnLcdPosition@line        cstackBANK0  000066
 DisplayOnLcdPosition@row         cstackBANK0  000067
@@ -346,7 +346,7 @@ _CCP1X                           (abs)        007DDD
 _CCP1Y                           (abs)        007DDC
 _CCPR1L                          (abs)        000FBC
 _CLAVIER                         (abs)        180000
-_CLAVIER_GetPressedKey           text35       003E90
+_CLAVIER_GetKey                  text35       003E90
 _DelayLCDShort                   text14       003EFC
 _DisplayOnLcdPosition            text11       003B54
 _EECON2                          (abs)        000F7E
@@ -796,7 +796,7 @@ ___wmul@product                  cstackBANK0  000064
 __accesstop                      (abs)        000060
 __activetblptr                   (abs)        000003
 __end_of_ADC_Read                text8        0026BE
-__end_of_CLAVIER_GetPressedKey   text35       003EB0
+__end_of_CLAVIER_GetKey          text35       003EB0
 __end_of_DelayLCDShort           text14       003F04
 __end_of_DisplayOnLcdPosition    text11       003BCA
 __end_of_Interrupt_Init          text6        003ECC
@@ -910,7 +910,7 @@ __ptext8                         text8        002504
 __ptext9                         text9        00155C
 __ramtop                         ramtop       001000
 __size_of_ADC_Read               (abs)        000000
-__size_of_CLAVIER_GetPressedKey  (abs)        000000
+__size_of_CLAVIER_GetKey         (abs)        000000
 __size_of_DelayLCDShort          (abs)        000000
 __size_of_DisplayOnLcdPosition   (abs)        000000
 __size_of_Interrupt_Init         (abs)        000000
@@ -2201,7 +2201,7 @@ Total ram usage:       16 bytes
  This function calls:
 		i2_DisplayOnLcdPosition
 		_UART_Putc
-		_CLAVIER_GetPressedKey
+		_CLAVIER_GetKey
 		i2_PWM_Duty
 		_UART_Puts
  This function is called by:
@@ -2209,7 +2209,7 @@ Total ram usage:       16 bytes
  This function uses a non-reentrant model
 
 
- *************** function _CLAVIER_GetPressedKey *****************
+ *************** function _CLAVIER_GetKey *****************
  Defined at:
 		line 352 in file "utils.c"
  Parameters:    Size  Location     Type
@@ -2778,10 +2778,10 @@ utils.c
 		_Timer_Init    		CODE           	3EEA	0000	10
 		_DelayLCDShort 		CODE           	3EFC	0000	8
 		_LCD_Puts      		CODE           	3362	0000	202
-		_CLAVIER_GetPre		CODE           	3E90	0000	32
 		_UART_Putc     		CODE           	3ECC	0000	16
 		_UART_Puts     		CODE           	39DE	0000	128
 		_Interrupt_Init		CODE           	3EB0	0000	28
+		_CLAVIER_GetKey		CODE           	3E90	0000	32
 		_DisplayOnLcdPo		CODE           	3B54	0000	118
 		_interruptions 		CODE           	0008	0000	582
 		_ADC_Read      		CODE           	2504	0000	442
