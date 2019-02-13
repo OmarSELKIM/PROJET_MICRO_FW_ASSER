@@ -10,9 +10,9 @@ CND_CONF=default
 CND_DISTDIR=dist
 TMPDIR=build/${CND_CONF}/${IMAGE_TYPE}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/FW_ASSER.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-OUTPUT_BASENAME=FW_ASSER.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-PACKAGE_TOP_DIR=fwasser.x/
+OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/PROJET_MICRO_FW_ASSER.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+OUTPUT_BASENAME=PROJET_MICRO_FW_ASSER.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+PACKAGE_TOP_DIR=projetmicrofwasser/
 
 # Functions
 function checkReturnCode
@@ -57,15 +57,15 @@ mkdir -p ${TMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory ${TMPDIR}/fwasser.x/bin
+makeDirectory ${TMPDIR}/projetmicrofwasser/bin
 copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}" 0755
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/package/fwasser.x.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/package/projetmicrofwasser.tar
 cd ${TMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/fwasser.x.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/projetmicrofwasser.tar *
 checkReturnCode
 
 # Cleanup
