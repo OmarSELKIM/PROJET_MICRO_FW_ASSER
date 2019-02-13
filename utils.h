@@ -62,6 +62,7 @@
 typedef struct User{
     byte UserId;
     byte UserPsw;
+    bool isAdmin=0;
 }User;
 
 User usrTab[3];
