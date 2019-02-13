@@ -3,10 +3,10 @@ _loop: CODE, 4226 0 1290
 _PWM_Duty: CODE, 11040 0 306
 _LCD_Init: CODE, 10362 0 360
 ___aldiv: CODE, 9052 0 472
-i2_DelayLCDShort: CODE, 16224 0 8
-_Timer_Init: CODE, 16198 0 10
+i2_DelayLCDShort: CODE, 16262 0 8
+_Timer_Init: CODE, 16236 0 10
 __stringdata: SMALLCONST, 4118 0 106
-_DelayLCDShort: CODE, 16216 0 8
+_DelayLCDShort: CODE, 16254 0 8
 i2_LCD_Puts: CODE, 14280 0 156
 i2___ftdiv: CODE, 11938 0 286
 i2___fttol: CODE, 11346 0 304
@@ -16,7 +16,7 @@ ___ftpack: CODE, 9966 0 396
 _dpowers: SMALLCONST, 4108 0 10
 _trunc: CODE, 13596 0 180
 i2___lwtoft: CODE, 16018 0 46
-_main: CODE, 16184 0 14
+_main: CODE, 16222 0 14
 ___lwtoft: CODE, 15668 0 76
 i2_PWM_Duty: CODE, 12484 0 246
 _round: CODE, 14436 0 148
@@ -26,20 +26,21 @@ i2___ftmul: CODE, 10722 0 318
 ___lmul: CODE, 13952 0 168
 _Delay_ms: CODE, 16064 0 44
 i2___ftpack: CODE, 12730 0 238
-_UART_Putc: CODE, 16168 0 16
+_UART_Putc: CODE, 16206 0 16
 _UART_Puts: CODE, 14862 0 128
-_Interrupt_Init: CODE, 16140 0 28
+_Interrupt_Init: CODE, 16178 0 28
 __initialization: CODE, 15888 0 62
 ___lwdiv: CODE, 13404 0 192
+i2_Delay_ms: CODE, 16108 0 38
 _frexp: CODE, 13776 0 176
 ___lldiv: CODE, 11650 0 288
 i2___aldiv: CODE, 12224 0 260
-_CLAVIER_GetKey: CODE, 16108 0 32
+_CLAVIER_GetKey: CODE, 16146 0 32
 i2___altoft: CODE, 14584 0 148
 _isdigit: CODE, 15744 0 74
 _sprintf: CODE, 5516 0 1044
 _DisplayOnLcdPosition: CODE, 15236 0 118
-_interruptions: CODE, 8 0 582
+_interruptions: CODE, 8 0 564
 ___lwmod: CODE, 14120 0 160
 i2_DisplayOnLcdPosition: CODE, 15568 0 100
 _setup: CODE, 15114 0 122
@@ -52,4 +53,4 @@ ___altoft: CODE, 12968 0 234
 _PWM_Init: CODE, 14732 0 130
 ___fttol: CODE, 8568 0 484
 ___ftdiv: CODE, 8066 0 502
-Total: 16798
+Total: 16818

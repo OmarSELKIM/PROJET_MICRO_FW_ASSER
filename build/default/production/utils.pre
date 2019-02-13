@@ -12120,6 +12120,8 @@ void Timer_Init();
 void PORT_Init();
 void Interrupt_Init(void);
 
+void interrupt interruptions(void);
+
 void PWM_Duty(unsigned int duty);
 
 void DelayLCDLong(void);
@@ -12134,7 +12136,6 @@ void LCD_ShiftDisplay(char _direction,int _offset);
 
 void afficheur_write_clav();
 void DisplayOnLcdPosition(char line, char row, char data[]);
-void interrupt interruptions(void);
 
 void UART_Putc(char c);
 void UART_Puts(char c[]);
@@ -12408,8 +12409,12 @@ _delay((unsigned long)((20)*(11059200/4000.0)));
 }
 
 void interrupt interruptions(void) {
+
+# 290
 if (RC2IF) {
 while (PIR3bits.RC2IF == 0) {
+
+# 301
 if (RCSTA2bits.OERR == 1) {
 RCSTA2bits.OERR = 0;
 RCSTA2bits.CREN = 0;
@@ -12430,25 +12435,22 @@ CLAVIER_GetKey();
 switch (VAL_CLAV) {
 case 0x0c:
 LCD_CTRL_PORT = 0x10;
-_delay((unsigned long)((50)*(11059200/4000.0)));
+Delay_ms(50);
 break;
 case 0x0d:
 LCD_CTRL_PORT = 0x14;
-_delay((unsigned long)((50)*(11059200/4000.0)));
+Delay_ms(50);
 break;
 case 0x0e:
 LCD_CTRL_PORT = 0x80;
-_delay((unsigned long)((50)*(11059200/4000.0)));
+Delay_ms(50);
 LCD_CTRL_PORT = 0x01;
-_delay((unsigned long)((50)*(11059200/4000.0)));
+Delay_ms(50);
 PWM_Duty(0);
 break;
 case 0x0f:
 
-
-
 UART_Putc(0x14);
-
 
 if (PORTHbits.RH4 == 1) {
 
@@ -12456,17 +12458,17 @@ if (PORTHbits.RH4 == 1) {
 if (PORTHbits.RH4 == 0) {
 
 UART_Puts("PWM Clav:");
-_delay((unsigned long)((20)*(11059200/4000.0)));
+Delay_ms(20);
 UART_Puts(chaine_clav);
-_delay((unsigned long)((20)*(11059200/4000.0)));
+Delay_ms(20);
 UART_Putc('%');
-_delay((unsigned long)((20)*(11059200/4000.0)));
+Delay_ms(20);
 PWM_Duty(PWM_clav);
 }
-_delay((unsigned long)((20)*(11059200/4000.0)));
+Delay_ms(20);
 UART_Putc(0x0A);
 UART_Putc(0x0D);
-_delay((unsigned long)((50)*(11059200/4000.0)));
+Delay_ms(50);
 break;
 default:
 
@@ -12502,7 +12504,6 @@ unsigned long pot_value;
 int valeur_pwm;
 
 ADCON0bits.GO = 1;
-
 while (ADCON0bits.GO);
 
 if (ADRES > 0xB33) {

@@ -282,8 +282,22 @@ void DisplayOnLcdPosition(char line, char row, char data[]) {
 }
 
 void interrupt interruptions(void) {
+    /*
+     RC2IF: EUSART Receive Interrupt Flag bit
+            1 = The EUSART receive buffer, RCREG2, is full (cleared when RCREG2 is read)
+            0 = The EUSART receive buffer is empty
+     */
     if (RC2IF) {
         while (PIR3bits.RC2IF == 0) {
+            /*
+             CREN: Continuous Receive Enable bit
+                    Asynchronous mode:
+                    1 = Enables receiver
+                    0 = Disables receiver
+             OERR: Overrun Error bit
+                    1 = Overrun error (can be cleared by clearing bit, CREN)
+                    0 = No overrun error
+             */
             if (RCSTA2bits.OERR == 1) {
                 RCSTA2bits.OERR = 0; // clear overrun if it occurs
                 RCSTA2bits.CREN = 0;
@@ -304,25 +318,22 @@ void interrupt interruptions(void) {
         switch (VAL_CLAV) {
             case 0x0c: //flèche gauche
                 LCD_CTRL_PORT = 0x10; //déplace le curseur à gauche
-                __delay_ms(50);
+                Delay_ms(50);
                 break;
             case 0x0d: //flèche droite
                 LCD_CTRL_PORT = 0x14; //déplace le curseur à droite
-                __delay_ms(50);
+                Delay_ms(50);
                 break;
             case 0x0e: //AC
                 LCD_CTRL_PORT = 0x80;
-                __delay_ms(50);
+                Delay_ms(50);
                 LCD_CTRL_PORT = 0x01;
-                __delay_ms(50);
+                Delay_ms(50);
                 PWM_Duty(0); //Applique la valeur potar au Ventilateur en PWM
                 break;
             case 0x0f: //ENT
 
-                //send_1(0x09); //décale TAB
-                //send_1(0x09); //décale TAB
                 UART_Putc(0x14); //petite police
-                //send_1(0x0E); //grande police
 
                 if (SWI_1 == 1) {
                     // send_msg(chaine_adc);
@@ -330,17 +341,17 @@ void interrupt interruptions(void) {
                 if (SWI_1 == 0) {
                     //send_msg(VAL_CLAV);
                     UART_Puts("PWM Clav:");
-                    __delay_ms(20);
+                    Delay_ms(20);
                     UART_Puts(chaine_clav);
-                    __delay_ms(20);
+                    Delay_ms(20);
                     UART_Putc('%');
-                    __delay_ms(20);
+                    Delay_ms(20);
                     PWM_Duty(PWM_clav); //Applique la valeur potar au Ventilateur en PWM
                 }
-                __delay_ms(20);
+                Delay_ms(20);
                 UART_Putc(0x0A); //Retour à la ligne imprimante
                 UART_Putc(0x0D); //Retour chariot
-                __delay_ms(50);
+                Delay_ms(50);
                 break;
             default:
                 //afficheur_write_clav(); //Affiche la valeur du clavier
@@ -376,7 +387,6 @@ unsigned int ADC_Read() {
     int valeur_pwm;
 
     ADCON0bits.GO = 1;
-
     while (ADCON0bits.GO); //Bloquant
 
     if (ADRES > 0xB33) {

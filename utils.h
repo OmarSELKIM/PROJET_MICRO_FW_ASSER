@@ -90,6 +90,8 @@ void Timer_Init();
 void PORT_Init();
 void Interrupt_Init(void);
 
+void interrupt interruptions(void);
+
 void PWM_Duty(unsigned int duty);
 
 void DelayLCDLong(void);
@@ -104,7 +106,6 @@ void LCD_ShiftDisplay(byte _direction,int _offset);
 
 void afficheur_write_clav();
 void DisplayOnLcdPosition(char line, char row, char data[]);
-void interrupt interruptions(void);
 
 void UART_Putc(char c);
 void UART_Puts(char c[]);
