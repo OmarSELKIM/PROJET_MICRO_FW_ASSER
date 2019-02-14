@@ -29,23 +29,26 @@ void setup(void) {
     Ports_Init(); //Initialisation ports
     PWM_Init(); //Initialisation PWM
     Timer_Init(); //Initalisation timer1 (PWM)
-    Interrupt_Init();
+    //Interrupt_Init();
     LCD_Init(); //Initialisation LCD
 
     T0CONbits.TMR0ON = 1; //Switch On Timer-0
     TMR1ON = 1;
     TMR0L = 1; //reset timer 0 pour PWM
     LCD_Puts("Init ok");
-    for(char i=0;i<200;i++){
-        __delay_ms(10);
-    }
+    Delay_ms(500);
 }
 
 void loop(void) {
     //Pour fonctionner, désactiver les fonctions LCD
-
-    // putrsXLCD("Hello World"); //write to LCD
-    //    LCD_puts("Hello world");
+    LCD_SetCursorAt(1,4);
+    LCD_Puts("Loop()");
+    Delay_ms(250);
+    LCD_ShiftDisplay(LCD_SHIFT_LEFT,1);
+    Delay_ms(250);
+    LCD_ShiftDisplay(LCD_SHIFT_LEFT,1);
+    Delay_ms(250);
+    LCD_ShiftDisplay(LCD_SHIFT_LEFT,1);
     //Pour fonctionner, désactiver les fonctions LCD
     //PORTD = TMR0L; //Output count value on Port-D, compte sur les LEDs
 

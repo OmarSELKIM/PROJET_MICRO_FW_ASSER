@@ -58,11 +58,25 @@
 #define LCD_SHIFT_LEFT          0x01
 #define LCD_SHIFT_RITGH         0x02
 
+typedef struct Heure{
+    byte jour;
+    byte mois;
+    byte annee;
+}Heure;
+
+Heure heureActuelle;
+
+typedef struct Date{
+    byte jour;
+    byte mois;
+    byte annee;
+}Date;
+
+Date dateActuelle;
 
 typedef struct User{
-    byte UserId;
-    byte UserPsw;
-    bool isAdmin=0;
+    byte userId;
+    byte userPsw;
 }User;
 
 User usrTab[3];
@@ -100,10 +114,12 @@ void DelayLCDShort(void);
 void LCD_Init();
 void LCD_Putc(char car);
 void LCD_Puts(char chaine[]);
-void LCD_SetCursorAt(unsigned char _line,unsigned char _row);
+void LCD_SetCursorAt(byte _line,byte _row);
 void LCD_Clear(void);
 void LCD_ReturnHome(void);
 void LCD_ShiftDisplay(byte _direction,int _offset);
+
+void Affichage_Menu(Date _d,Heure _h,byte _cons,byte _ret);
 
 void afficheur_write_clav();
 void DisplayOnLcdPosition(char line, char row, char data[]);

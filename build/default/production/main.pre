@@ -12093,10 +12093,26 @@ far unsigned char LCD_DATA_PORT @ 0x1A0002;
 # 101
 far unsigned char LCD_CTRL_PORT @ 0x1A0000;
 
-# 62 "utils.h"
+# 61 "utils.h"
+typedef struct Heure{
+char jour;
+char mois;
+char annee;
+}Heure;
+
+Heure heureActuelle;
+
+typedef struct Date{
+char jour;
+char mois;
+char annee;
+}Date;
+
+Date dateActuelle;
+
 typedef struct User{
-char UserId;
-char UserPsw;
+char userId;
+char userPsw;
 }User;
 
 User usrTab[3];
@@ -12109,7 +12125,7 @@ char chaine_asser[16];
 volatile int count = 0;
 int S_vent = 0;
 
-# 83
+# 98
 void DelayFor1TCY(void);
 void Delay_ms(unsigned int _tDelay);
 void Delay_us(unsigned int _tDelay);
@@ -12133,6 +12149,8 @@ void LCD_SetCursorAt(unsigned char _line,unsigned char _row);
 void LCD_Clear(void);
 void LCD_ReturnHome(void);
 void LCD_ShiftDisplay(char _direction,int _offset);
+
+void Affichage_Menu(Date _d,Heure _h,char _cons,char _ret);
 
 void afficheur_write_clav();
 void DisplayOnLcdPosition(char line, char row, char data[]);
@@ -12169,21 +12187,29 @@ void setup(void) {
 Ports_Init();
 PWM_Init();
 Timer_Init();
-Interrupt_Init();
+
 LCD_Init();
 
 T0CONbits.TMR0ON = 1;
 TMR1ON = 1;
 TMR0L = 1;
 LCD_Puts("Init ok");
-for(char i=0;i<200;i++){
-_delay((unsigned long)((10)*(11059200/4000.0)));
-}
+Delay_ms(500);
 }
 
 void loop(void) {
 
-# 52
+LCD_SetCursorAt(1,4);
+LCD_Puts("Loop()");
+Delay_ms(250);
+LCD_ShiftDisplay(0x01,1);
+Delay_ms(250);
+LCD_ShiftDisplay(0x01,1);
+Delay_ms(250);
+LCD_ShiftDisplay(0x01,1);
+
+
+
 if (TMR1IF == 1) {
 
 count++;
@@ -12248,6 +12274,6 @@ DisplayOnLcdPosition(2, 0, "Code:");
 
 }
 
-# 133
+# 136
 }
 
