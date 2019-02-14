@@ -12093,18 +12093,21 @@ far unsigned char LCD_DATA_PORT @ 0x1A0002;
 # 97
 far unsigned char LCD_CTRL_PORT @ 0x1A0000;
 
-# 61 "utils.h"
+# 63 "utils.h"
 typedef struct User{
 char UserId;
 char UserPsw;
 }User;
+
+struct tm currentTime;
 
 User usrTab[3];
 
 unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL;
 char chaine_adc[100];
 char chaine_clav[4] = {'0', '0', '0', '\0'};
-char code_clav[5] = {'0', '0', '0', '0', '\0'};
+char code_malette[5] = {'1', '2', '3', '4', '\0'};
+char code_clav[5] = {'_', '_', '_', '_', '\0'};
 char code_U1[5] = {'0', '0', '0', '0', '\0'};
 char code_U2[5] = {'0', '0', '0', '0', '\0'};
 char code_U3[5] = {'0', '0', '0', '0', '\0'};
@@ -12115,7 +12118,7 @@ int iREAD = 0;
 volatile int count = 0;
 int S_vent = 0;
 
-# 88
+# 93
 void DelayFor1TCY(void);
 
 void Ports_Init();
@@ -12131,6 +12134,7 @@ void DelayLCDShort(void);
 void LCD_Init();
 void LCD_Putc(char car);
 void LCD_Puts(char chaine[]);
+void lcdAFF(char info[]);
 void LCD_SetCursorAt(unsigned char _line,unsigned char _row);
 void LCD_Clear(void);
 void LCD_ReturnHome(void);
@@ -12142,6 +12146,7 @@ void interrupt interruptions(void);
 
 void UART_Putc(char c);
 void UART_Puts(char c[]);
+
 
 char CLAVIER_GetPressedKey(void);
 
@@ -12338,6 +12343,19 @@ while (chaine[i] != '\0') {
 LCD_DATA_PORT = chaine[i];
 i++;
 DelayLCDShort();
+}
+}
+
+void lcdAFF(char info[])
+{
+int tailletab = 4;
+int i;
+
+
+for(i=0;info[i];i++)
+{
+LCD_Putc(info[i]);
+
 }
 }
 

@@ -34,7 +34,9 @@
 #include <math.h>
 #include <stdio.h> 
 #include <stdlib.h>
+#include <RTCC.h>
 #include "mcc_generated_files/device_config.h"
+#include "mcc_generated_files/rtcc.h"
 
 
 
@@ -63,12 +65,15 @@ typedef struct User{
     byte UserPsw;
 }User;
 
+struct tm currentTime;
+
 User usrTab[3];
 
 unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL;
 char chaine_adc[100];
 char chaine_clav[4] = {'0', '0', '0', '\0'};
-char code_clav[5] = {'0', '0', '0', '0', '\0'};
+char code_malette[5] = {'1', '2', '3', '4', '\0'};
+char code_clav[5] = {'_', '_', '_', '_', '\0'};
 char code_U1[5] = {'0', '0', '0', '0', '\0'};
 char code_U2[5] = {'0', '0', '0', '0', '\0'};
 char code_U3[5] = {'0', '0', '0', '0', '\0'};
@@ -100,6 +105,7 @@ void DelayLCDShort(void);
 void LCD_Init();
 void LCD_Putc(char car);
 void LCD_Puts(char chaine[]);
+void lcdAFF(char info[]);
 void LCD_SetCursorAt(unsigned char _line,unsigned char _row);
 void LCD_Clear(void);
 void LCD_ReturnHome(void);
@@ -111,6 +117,7 @@ void interrupt interruptions(void);
 
 void UART_Putc(char c);
 void UART_Puts(char c[]);
+
 
 byte CLAVIER_GetPressedKey(void);
 

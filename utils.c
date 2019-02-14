@@ -199,6 +199,19 @@ void LCD_Puts(char chaine[]) {
     }
 }
 
+void lcdAFF(char info[])
+{
+    int tailletab = 4;
+    int i;
+    //char chaine[49] = "03/12 11:95 ????                        CODE:****";
+
+    for(i=0;info[i];i++)
+    {
+        LCD_Putc(info[i]);
+        
+    }
+}
+
 void LCD_SetCursorAt(unsigned char _line, unsigned char _row) {
     if (_line == 1) {
         LCD_CTRL_PORT = (0x80) | ((_row) & 0x0f);
