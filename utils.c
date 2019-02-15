@@ -18,19 +18,6 @@ void DelayLCDShort(void) {
     __delay_us(50);
 }
 
-void Interrupt_Init(void) {
-    INTCON2 = 0b01111001;
-    INTCON = 0b11001001;
-    INTCONbits.INT0IE = 1;
-    INTCONbits.GIE = 1;
-    INTCONbits.INT0IF = 0;
-    RCONbits.IPEN = 1;
-    PIE1bits.ADIE = 1;
-    IPR1bits.ADIP = 1;
-    PIR1bits.ADIF = 0;
-    INTCON3 = 0b01001001;
-}
-
 void Ports_Init() {
     //Config IT
     INTCON = 0b11010000;
@@ -199,16 +186,14 @@ void LCD_Puts(char chaine[]) {
     }
 }
 
-void lcdAFF(char info[])
-{
+void lcdAFF(char info[]) {
     int tailletab = 4;
     int i;
     //char chaine[49] = "03/12 11:95 ????                        CODE:****";
 
-    for(i=0;info[i];i++)
-    {
+    for (i = 0; info[i]; i++) {
         LCD_Putc(info[i]);
-        
+
     }
 }
 
@@ -258,6 +243,40 @@ void DisplayOnLcdPosition(char line, char row, char data[]) {
     __delay_ms(20);
 }
 
+void Interrupt_Init(void) {
+  /*  INTCON2 = 0b01111001;
+    INTCON = 0b11001001;
+    INTCONbits.INT0IE = 1;
+    INTCONbits.GIE = 1;
+    INTCONbits.INT0IF = 0;
+    RCONbits.IPEN = 1;
+    PIE1bits.ADIE = 1;
+    IPR1bits.ADIP = 1;
+    PIR1bits.ADIF = 0;
+      INTCON3 = 0b01001001;*/
+    TRISBbits.TRISB0=1;		/* Make INT0 pin as an input pin*/
+    
+    /* Also make PBADEN off in Configuration file or clear ADON 
+    in ADCON0 so as to set analog pin as digital*/
+
+    INTCON2=0x00;		/* Set Interrupt detection on falling Edge*/
+    INTCONbits.INT0IF=0;	/* Clear INT0IF flag*/
+    INTCONbits.INT0IE=1;	/* Enable INT0 external interrupt*/
+    INTCONbits.GIE=1;		/* Enable Global Interrupt*/
+    ei();
+}
+
+void interrupt interruption() {
+    if (INTCONbits.INT0IF == 1) {
+        clavier_read();
+        INTCONbits.INT0IF = 0;
+        if (VAL_CLAV == 0x0f){
+            
+        }
+    }
+}
+
+/*
 void interrupt interruptions(void) {
     if (RC2IF) {
         while (PIR3bits.RC2IF == 0) {
@@ -322,7 +341,7 @@ void interrupt interruptions(void) {
         }
     }
 }
-
+ */
 void UART_Putc(char c) {
     while (UART_BUSY);
     TXREG1 = c;
@@ -339,6 +358,15 @@ byte CLAVIER_GetPressedKey(void) {
     byte _val = 0x00;
     _val = CLAVIER & 0x0f;
     return _val;
+}
+
+void clavier_read() {
+    VAL_CLAV = CLAVIER & 0x0f;
+    if (iREAD == 4) {
+        iREAD = 0;
+    }
+    chaine_clav[iREAD] = VAL_CLAV + 0x30;
+    iREAD++;
 }
 
 unsigned int ADC_Read() {

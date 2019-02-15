@@ -12094,10 +12094,10 @@ far unsigned char LCD_DATA_PORT @ 0x1A0002;
 far unsigned char LCD_CTRL_PORT @ 0x1A0000;
 
 # 63 "utils.h"
-typedef struct User{
+typedef struct User {
 char UserId;
 char UserPsw;
-}User;
+} User;
 
 struct tm currentTime;
 
@@ -12105,10 +12105,10 @@ User usrTab[3];
 
 unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL;
 char chaine_adc[100];
-char chaine_clav[4] = {'0', '0', '0', '\0'};
+char chaine_clav[5] = {'0', '0', '0', '0', '\0'};
 char code_malette[5] = {'1', '2', '3', '4', '\0'};
 char code_clav[5] = {'_', '_', '_', '_', '\0'};
-char code_U1[5] = {'0', '0', '0', '0', '\0'};
+char code_U1[5] = {0x31, 0x32, 0x33, 0x34, '\0'};
 char code_U2[5] = {'0', '0', '0', '0', '\0'};
 char code_U3[5] = {'0', '0', '0', '0', '\0'};
 int a = 0, PWM_clav = 0, adc_value;
@@ -12117,8 +12117,9 @@ char chaine_asser[16];
 int iREAD = 0;
 volatile int count = 0;
 int S_vent = 0;
+bit flag_change = 0;
 
-# 93
+# 94
 void DelayFor1TCY(void);
 
 void Ports_Init();
@@ -12135,10 +12136,11 @@ void LCD_Init();
 void LCD_Putc(char car);
 void LCD_Puts(char chaine[]);
 void lcdAFF(char info[]);
-void LCD_SetCursorAt(unsigned char _line,unsigned char _row);
+void LCD_SetCursorAt(unsigned char _line, unsigned char _row);
 void LCD_Clear(void);
 void LCD_ReturnHome(void);
-void LCD_ShiftDisplay(char _direction,int _offset);
+void LCD_ShiftDisplay(char _direction, int _offset);
+void clavier_read();
 
 void afficheur_write_clav();
 void DisplayOnLcdPosition(char line, char row, char data[]);
@@ -12163,19 +12165,6 @@ _delay((unsigned long)((5)*(11059200/4000.0)));
 
 void DelayLCDShort(void) {
 _delay((unsigned long)((50)*(11059200/4000000.0)));
-}
-
-void Interrupt_Init(void) {
-INTCON2 = 0b01111001;
-INTCON = 0b11001001;
-INTCONbits.INT0IE = 1;
-INTCONbits.GIE = 1;
-INTCONbits.INT0IF = 0;
-RCONbits.IPEN = 1;
-PIE1bits.ADIE = 1;
-IPR1bits.ADIP = 1;
-PIR1bits.ADIF = 0;
-INTCON3 = 0b01001001;
 }
 
 void Ports_Init() {
@@ -12346,14 +12335,12 @@ DelayLCDShort();
 }
 }
 
-void lcdAFF(char info[])
-{
+void lcdAFF(char info[]) {
 int tailletab = 4;
 int i;
 
 
-for(i=0;info[i];i++)
-{
+for (i = 0; info[i]; i++) {
 LCD_Putc(info[i]);
 
 }
@@ -12405,71 +12392,30 @@ LCD_Puts(data);
 _delay((unsigned long)((20)*(11059200/4000.0)));
 }
 
-void interrupt interruptions(void) {
-if (RC2IF) {
-while (PIR3bits.RC2IF == 0) {
-if (RCSTA2bits.OERR == 1) {
-RCSTA2bits.OERR = 0;
-RCSTA2bits.CREN = 0;
-RCSTA2bits.CREN = 1;
-DisplayOnLcdPosition(1, 10, "yes");
+void Interrupt_Init(void) {
+
+# 257
+TRISBbits.TRISB0=1;
+
+# 262
+INTCON2=0x00;
+INTCONbits.INT0IF=0;
+INTCONbits.INT0IE=1;
+INTCONbits.GIE=1;
+(INTCONbits.GIE = 1);
 }
-}
-RX_U_2 = RCREG2;
-UART_Putc(RX_U_2);
-}
 
-if (INT0IF)
-{
-INT0IF = 0;
-CLAVIER_GetPressedKey();
+void interrupt interruption() {
+if (INTCONbits.INT0IF == 1) {
+clavier_read();
+INTCONbits.INT0IF = 0;
+if (VAL_CLAV == 0x0f){
 
-
-switch (VAL_CLAV) {
-case 0x0c:
-LCD_CTRL_PORT = 0x10;
-_delay((unsigned long)((50)*(11059200/4000.0)));
-break;
-case 0x0d:
-LCD_CTRL_PORT = 0x14;
-_delay((unsigned long)((50)*(11059200/4000.0)));
-break;
-case 0x0e:
-LCD_CTRL_PORT = 0x80;
-_delay((unsigned long)((50)*(11059200/4000.0)));
-LCD_CTRL_PORT = 0x01;
-_delay((unsigned long)((50)*(11059200/4000.0)));
-PWM_Duty(0);
-break;
-case 0x0f:
-
-
-
-UART_Putc(0x14);
-
-
-if (PORTHbits.RH4 == 1) {
-
-}
-if (PORTHbits.RH4 == 0) {
-
-UART_Puts("PWM Clav:");
-_delay((unsigned long)((20)*(11059200/4000.0)));
-UART_Puts(chaine_clav);
-_delay((unsigned long)((20)*(11059200/4000.0)));
-UART_Puts("%");
-_delay((unsigned long)((20)*(11059200/4000.0)));
-PWM_Duty(PWM_clav);
-}
-_delay((unsigned long)((20)*(11059200/4000.0)));
-UART_Puts(0x0A);
-UART_Puts(0x0D);
-_delay((unsigned long)((50)*(11059200/4000.0)));
-break;
 }
 }
 }
 
+# 345
 void UART_Putc(char c) {
 while (TXSTA1bits.TRMT == 0);
 TXREG1 = c;
@@ -12486,6 +12432,15 @@ char CLAVIER_GetPressedKey(void) {
 char _val = 0x00;
 _val = CLAVIER & 0x0f;
 return _val;
+}
+
+void clavier_read() {
+VAL_CLAV = CLAVIER & 0x0f;
+if (iREAD == 4) {
+iREAD = 0;
+}
+chaine_clav[iREAD] = VAL_CLAV + 0x30;
+iREAD++;
 }
 
 unsigned int ADC_Read() {
