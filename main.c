@@ -43,6 +43,7 @@ void setup(void) {
     for (char i = 0; i < 200; i++) {
         __delay_ms(10);
     }
+    LCD_CTRL_PORT = LCD_CMD_DISP_CLEAR;
 }
 
 void loop(void) {
@@ -70,103 +71,81 @@ void loop(void) {
 
     sprintf(S_vent_string, "%3dHz", S_vent);
 
-    time_display(1);
+    if (flag_change == 0) {
+        flag_change = 1;
+        LCD_CTRL_PORT = 0x01;
+        code_OK = 0;
+        chaine_clav[0] = '_';
+        chaine_clav[1] = '_';
+        chaine_clav[2] = '_';
+        chaine_clav[3] = '_';
+    }
 
-    if (SWI_1 == 1) { //POTENTIOMETRE
-        if (flag_change == 0) {
+    if (code_OK == 0) {
+        DisplayOnLcdPosition(1, 0, "Entrer un code:");
+        __delay_ms(20);
+        DisplayOnLcdPosition(2, 6, chaine_clav);
+        __delay_ms(20);
+        if (code_malette[0] == chaine_clav[0] && code_malette[1] == chaine_clav[1] && code_malette[2] == chaine_clav[2] && code_malette[3] == chaine_clav[3]) {
+            code_OK = 1;
             LCD_CTRL_PORT = LCD_CMD_DISP_CLEAR;
-            flag_change = 1;
-            code_OK = 0;
-        }
-
-        if (code_OK == 0) {
-             LCD_CTRL_PORT = LCD_CMD_GOTO_START_L2; 
-            DisplayOnLcdPosition(2, 0, "Code:");
             __delay_ms(20);
-            DisplayOnLcdPosition(2, 5, chaine_clav);
-            __delay_ms(20);
-            if (code_malette[0] == chaine_clav[0] && code_malette[1] == chaine_clav[1] && code_malette[2] == chaine_clav[2] && code_malette[3] == chaine_clav[3]) {
-                code_OK = 1;
-                DisplayOnLcdPosition(2, 9, "Code OK");
-                for (char i = 0; i < 200; i++) {
-                    __delay_ms(10);
-                }
-                LCD_CTRL_PORT = LCD_CMD_DISP_CLEAR;
+            DisplayOnLcdPosition(1, 4, "Code OK");
+            for (char i = 0; i < 200; i++) {
+                __delay_ms(10);
             }
+            LCD_CTRL_PORT = LCD_CMD_DISP_CLEAR;
+            __delay_ms(20);
+
         }
+    }
 
-        if (code_OK == 1) {
+    if (code_OK == 1) {
 
+        time_display(2);
 
+        if (menu == 0) { //POTENTIOMETRE
             PWM_Duty(adc_value); //Applique la valeur potar au Ventilateur en PWM
             adc_value = ADC_Read(); //Lis le potentiomètre  
             PWM_Duty(adc_value); //Applique la valeur potar au Ventilateur en PWM
 
-            DisplayOnLcdPosition(2, 0, "Potar:");
+            DisplayOnLcdPosition(1, 0, "Potar:");
             __delay_ms(20);
             // affichage_chaine(chaine_adc); //affiche LCD valeur PWM
-            DisplayOnLcdPosition(2, 6, chaine_adc);
+            DisplayOnLcdPosition(1, 6, chaine_adc);
             __delay_ms(20);
-            DisplayOnLcdPosition(2, 9, "%");
+            DisplayOnLcdPosition(1, 9, "%");
             __delay_ms(20);
-            DisplayOnLcdPosition(2, 11, S_vent_string);
+            DisplayOnLcdPosition(1, 11, S_vent_string);
             __delay_ms(20);
             time_display(2);
         }
 
+        if (menu == 1) { //CLAVIER
 
+            float temp = ((clav_pwm[0] - 0x30)*10 + (clav_pwm[1] - 0x30))*10.23;
+            PWM_clav = (int) round(temp);
 
+            __delay_ms(20);
+            DisplayOnLcdPosition(1, 0, "Clav:");
+            __delay_ms(20);
+            DisplayOnLcdPosition(1, 5, clav_pwm);
+            __delay_ms(20);
+            DisplayOnLcdPosition(1,7,"%    ");
+            __delay_ms(20);
+            DisplayOnLcdPosition(1, 11, S_vent_string);
 
+            PWM_Duty(PWM_clav); //Applique la valeur potar au Ventilateur en PWM
 
-        if (SWI_1 == 0) { //CLAVIER
-
-            if (flag_change == 1) {
-                LCD_CTRL_PORT = LCD_CMD_DISP_CLEAR;
-                flag_change = 0;
-                code_OK = 0;
+            if (BP1 == 0) {
+                PWM_clav++;
             }
-            if (code_OK == 0) {
-                DisplayOnLcdPosition(2, 0, "Code:");
-                __delay_ms(20);
-                DisplayOnLcdPosition(2, 5, chaine_clav);
-                __delay_ms(20);
-                if (code_malette[0] == chaine_clav[0] && code_malette[1] == chaine_clav[1] && code_malette[2] == chaine_clav[2] && code_malette[3] == chaine_clav[3]) {
-                    code_OK = 1;
-                    DisplayOnLcdPosition(2, 9, "Code OK");
-                    for (char i = 0; i < 200; i++) {
-                        __delay_ms(10);
-                    }
-                    LCD_CTRL_PORT = LCD_CMD_DISP_CLEAR;
-                }
-            }
-            if (code_OK == 1) {
 
-
-                float temp = ((chaine_clav[0] - 0x30)*100 + (chaine_clav[1] - 0x30)*10 + (chaine_clav[2] - 0x30))*10.23;
-                PWM_clav = (int) round(temp);
-
-                __delay_ms(20);
-                DisplayOnLcdPosition(2, 0, "Clav:");
-                __delay_ms(20);
-                if (VAL_CLAV != 0x0f) {
-                    DisplayOnLcdPosition(2, 5, chaine_clav);
-                }
-                __delay_ms(20);
-                LCD_Puts("%");
-                __delay_ms(20);
-                DisplayOnLcdPosition(2, 11, S_vent_string);
-                
-                PWM_Duty(PWM_clav); //Applique la valeur potar au Ventilateur en PWM
-
-                if (BP1 == 0) {
-                    PWM_clav++;
-                }
-
-                if (BP2 == 0) {
-                    PWM_clav--;
-                }
+            if (BP2 == 0) {
+                PWM_clav--;
             }
         }
     }
 }
+
 

@@ -186,7 +186,6 @@ void LCD_Puts(char chaine[]) {
     }
 }
 
-
 void LCD_SetCursorAt(unsigned char _line, unsigned char _row) {
     if (_line == 1) {
         LCD_CTRL_PORT = (0x80) | ((_row) & 0x0f);
@@ -259,15 +258,13 @@ void Interrupt_Init(void) {
 void interrupt interruption() {
     if (INTCONbits.INT0IF == 1) {
         clavier_read();
+        CLAVIER_GetPressedKey();
         INTCONbits.INT0IF = 0;
         if (VAL_CLAV == 0x0f) {
 
         }
     }
-}
-
-/*
-void interrupt interruptions(void) {
+    //Imprimente UART
     if (RC2IF) {
         while (PIR3bits.RC2IF == 0) {
             if (RCSTA2bits.OERR == 1) {
@@ -281,57 +278,47 @@ void interrupt interruptions(void) {
         UART_Putc(RX_U_2);
     }
 
-    if (INT0IF) // flag 1
-    {
-        INT0IF = 0; // Reset the external interrupt flag
-        CLAVIER_GetPressedKey();
-        //LCD_CTRL_PORT = 0x14; //déplace le curseur à droite
-        //LCD_CTRL_PORT = 0x10; //déplace le curseur à gauche
-        switch (VAL_CLAV) {
-            case 0x0c: //flèche gauche
-                LCD_CTRL_PORT = 0x10; //déplace le curseur à gauche
-                __delay_ms(50);
-                break;
-            case 0x0d: //flèche droite
-                LCD_CTRL_PORT = 0x14; //déplace le curseur à droite
-                __delay_ms(50);
-                break;
-            case 0x0e: //AC
-                LCD_CTRL_PORT = 0x80;
-                __delay_ms(50);
-                LCD_CTRL_PORT = 0x01;
-                __delay_ms(50);
-                PWM_Duty(0); //Applique la valeur potar au Ventilateur en PWM
-                break;
-            case 0x0f: //ENT
+    switch (VAL_CLAV) {
+        case 0x0c: //flèche gauche
+            //LCD_CTRL_PORT = 0x10; //déplace le curseur à gauche
+            menu = 0;
+            __delay_ms(50);
+            break;
+        case 0x0d: //flèche droite
+            //LCD_CTRL_PORT = 0x14; //déplace le curseur à droite
+            menu = 1;
+            __delay_ms(50);
+            break;
+        case 0x0e: //AC
+            LCD_CTRL_PORT = 0x80;
+            __delay_ms(50);
+            LCD_CTRL_PORT = 0x01;
+            __delay_ms(50);
+            PWM_Duty(0); //Applique la valeur potar au Ventilateur en PWM
+            break;
+        case 0x0f: //ENT
 
-                //UART_Putc(0x09); //décale TAB
-                //UART_Putc(0x09); //décale TAB
-                UART_Putc(0x14); //petite police
-                //UART_Putc(0x0E); //grande police
+            //UART_Putc(0x09); //décale TAB
+            //UART_Putc(0x09); //décale TAB
+            UART_Putc(0x14); //petite police
+            //UART_Putc(0x0E); //grande police
 
-                if (SWI_1 == 1) {
-                    // send_msg(chaine_adc);
-                }
-                if (SWI_1 == 0) {
-                    //send_msg(VAL_CLAV);
-                    UART_Puts("PWM Clav:");
-                    __delay_ms(20);
-                    UART_Puts(chaine_clav);
-                    __delay_ms(20);
-                    UART_Puts("%");
-                    __delay_ms(20);
-                    PWM_Duty(PWM_clav); //Applique la valeur potar au Ventilateur en PWM
-                }
-                __delay_ms(20);
-                UART_Puts(0x0A); //Retour à la ligne imprimante
-                UART_Puts(0x0D); //Retour chariot
-                __delay_ms(50);
-                break;
-        }
+            //send_msg(VAL_CLAV);
+            UART_Puts("PWM:");
+            __delay_ms(20);
+            UART_Puts(chaine_clav);
+            __delay_ms(20);
+            UART_Puts("%");
+            __delay_ms(20);
+            PWM_Duty(PWM_clav); //Applique la valeur potar au Ventilateur en PWM
+            __delay_ms(20);
+            UART_Puts(0x0A); //Retour à la ligne imprimante
+            UART_Puts(0x0D); //Retour chariot
+            __delay_ms(50);
+            break;
     }
 }
- */
+
 void UART_Putc(char c) {
     while (UART_BUSY);
     TXREG1 = c;
@@ -344,10 +331,13 @@ void UART_Puts(char c[]) {
     }
 }
 
-byte CLAVIER_GetPressedKey(void) {
-    byte _val = 0x00;
+void CLAVIER_GetPressedKey() {
     _val = CLAVIER & 0x0f;
-    return _val;
+     if (iREAD1 == 2) {
+        iREAD1 = 0;
+    }
+    clav_pwm[iREAD1] = VAL_CLAV + 0x30;
+    iREAD1++;
 }
 
 void clavier_read() {
@@ -386,19 +376,19 @@ unsigned int ADC_Read() {
 }
 
 void time_display(int line) {
-   // RTCC_Initialize();
+    // RTCC_Initialize();
     if (!RTCC_TimeGet(&currentTime)) {
         char buff[8];
         itoa(buff, currentTime.tm_mday, 10);
-        DisplayOnLcdPosition(line, 0,buff);
-        DisplayOnLcdPosition(line, 2,"/");
+        DisplayOnLcdPosition(line, 2, buff);
+        DisplayOnLcdPosition(line, 4, "/");
         itoa(buff, currentTime.tm_mon, 10);
-        DisplayOnLcdPosition(line, 3, buff);
-        DisplayOnLcdPosition(line, 5, " ");
+        DisplayOnLcdPosition(line, 5, buff);
+        DisplayOnLcdPosition(line, 7, " ");
         itoa(buff, currentTime.tm_hour, 10);
-        DisplayOnLcdPosition(line, 6, buff);
-        DisplayOnLcdPosition(line, 8, ":");
+        DisplayOnLcdPosition(line, 8, buff);
+        DisplayOnLcdPosition(line, 10, ":");
         itoa(buff, currentTime.tm_min, 10);
-        DisplayOnLcdPosition(line, 9, buff);
+        DisplayOnLcdPosition(line, 11, buff);
     }
 }

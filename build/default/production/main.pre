@@ -12103,9 +12103,10 @@ struct tm currentTime;
 
 User usrTab[3];
 
-unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL;
+unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL, _val;
+char clav_pwm[2] = {'0','0'};
 char chaine_adc[100];
-char chaine_clav[4] = {'0', '0', '0', '0'};
+char chaine_clav[5] = {'0', '0', '0', '0', '\0'};
 char mot_de_passe[4] = {'0', '0', '0', '0'};
 char code_malette[4] = {'1', '2', '3', '4'};
 char code_clav[4] = {'_', '_', '_', '_'};
@@ -12116,12 +12117,14 @@ int a = 0, PWM_clav = 0, adc_value;
 unsigned char RX_U_2;
 char chaine_asser[16];
 int iREAD = 0;
+int iREAD1 = 0;
 volatile int count = 0;
 int S_vent = 0;
 bit flag_change = 0;
 int code_OK = 0;
+int menu = 0;
 
-# 96
+# 99
 void DelayFor1TCY(void);
 
 void Ports_Init();
@@ -12153,7 +12156,7 @@ void UART_Putc(char c);
 void UART_Puts(char c[]);
 
 
-char CLAVIER_GetPressedKey(void);
+void CLAVIER_GetPressedKey();
 
 unsigned int ADC_Read();
 
@@ -12196,6 +12199,7 @@ LCD_Puts("Init ok");
 for (char i = 0; i < 200; i++) {
 _delay((unsigned long)((10)*(11059200/4000.0)));
 }
+LCD_CTRL_PORT = 0x01;
 }
 
 void loop(void) {
@@ -12223,88 +12227,69 @@ TMR1IF = 0;
 
 sprintf(S_vent_string, "%3dHz", S_vent);
 
-time_display(1);
-
-if (PORTHbits.RH4 == 1) {
 if (flag_change == 0) {
-LCD_CTRL_PORT = 0x01;
 flag_change = 1;
+LCD_CTRL_PORT = 0x01;
 code_OK = 0;
+chaine_clav[0] = '_';
+chaine_clav[1] = '_';
+chaine_clav[2] = '_';
+chaine_clav[3] = '_';
 }
 
 if (code_OK == 0) {
-LCD_CTRL_PORT = 0xC0;
-DisplayOnLcdPosition(2, 0, "Code:");
+DisplayOnLcdPosition(1, 0, "Entrer un code:");
 _delay((unsigned long)((20)*(11059200/4000.0)));
-DisplayOnLcdPosition(2, 5, chaine_clav);
+DisplayOnLcdPosition(2, 6, chaine_clav);
 _delay((unsigned long)((20)*(11059200/4000.0)));
 if (code_malette[0] == chaine_clav[0] && code_malette[1] == chaine_clav[1] && code_malette[2] == chaine_clav[2] && code_malette[3] == chaine_clav[3]) {
 code_OK = 1;
-DisplayOnLcdPosition(2, 9, "Code OK");
+LCD_CTRL_PORT = 0x01;
+_delay((unsigned long)((20)*(11059200/4000.0)));
+DisplayOnLcdPosition(1, 4, "Code OK");
 for (char i = 0; i < 200; i++) {
 _delay((unsigned long)((10)*(11059200/4000.0)));
 }
 LCD_CTRL_PORT = 0x01;
+_delay((unsigned long)((20)*(11059200/4000.0)));
+
 }
 }
 
 if (code_OK == 1) {
 
+time_display(2);
 
+if (menu == 0) {
 PWM_Duty(adc_value);
 adc_value = ADC_Read();
 PWM_Duty(adc_value);
 
-DisplayOnLcdPosition(2, 0, "Potar:");
+DisplayOnLcdPosition(1, 0, "Potar:");
 _delay((unsigned long)((20)*(11059200/4000.0)));
 
-DisplayOnLcdPosition(2, 6, chaine_adc);
+DisplayOnLcdPosition(1, 6, chaine_adc);
 _delay((unsigned long)((20)*(11059200/4000.0)));
-DisplayOnLcdPosition(2, 9, "%");
+DisplayOnLcdPosition(1, 9, "%");
 _delay((unsigned long)((20)*(11059200/4000.0)));
-DisplayOnLcdPosition(2, 11, S_vent_string);
+DisplayOnLcdPosition(1, 11, S_vent_string);
 _delay((unsigned long)((20)*(11059200/4000.0)));
 time_display(2);
 }
 
-# 121
-if (PORTHbits.RH4 == 0) {
+if (menu == 1) {
 
-if (flag_change == 1) {
-LCD_CTRL_PORT = 0x01;
-flag_change = 0;
-code_OK = 0;
-}
-if (code_OK == 0) {
-DisplayOnLcdPosition(2, 0, "Code:");
-_delay((unsigned long)((20)*(11059200/4000.0)));
-DisplayOnLcdPosition(2, 5, chaine_clav);
-_delay((unsigned long)((20)*(11059200/4000.0)));
-if (code_malette[0] == chaine_clav[0] && code_malette[1] == chaine_clav[1] && code_malette[2] == chaine_clav[2] && code_malette[3] == chaine_clav[3]) {
-code_OK = 1;
-DisplayOnLcdPosition(2, 9, "Code OK");
-for (char i = 0; i < 200; i++) {
-_delay((unsigned long)((10)*(11059200/4000.0)));
-}
-LCD_CTRL_PORT = 0x01;
-}
-}
-if (code_OK == 1) {
-
-
-float temp = ((chaine_clav[0] - 0x30)*100 + (chaine_clav[1] - 0x30)*10 + (chaine_clav[2] - 0x30))*10.23;
+float temp = ((clav_pwm[0] - 0x30)*10 + (clav_pwm[1] - 0x30))*10.23;
 PWM_clav = (int) round(temp);
 
 _delay((unsigned long)((20)*(11059200/4000.0)));
-DisplayOnLcdPosition(2, 0, "Clav:");
+DisplayOnLcdPosition(1, 0, "Clav:");
 _delay((unsigned long)((20)*(11059200/4000.0)));
-if (VAL_CLAV != 0x0f) {
-DisplayOnLcdPosition(2, 5, chaine_clav);
-}
+DisplayOnLcdPosition(1, 5, clav_pwm);
 _delay((unsigned long)((20)*(11059200/4000.0)));
-LCD_Puts("%");
+DisplayOnLcdPosition(1,7,"%    ");
 _delay((unsigned long)((20)*(11059200/4000.0)));
-DisplayOnLcdPosition(2, 11, S_vent_string);
+DisplayOnLcdPosition(1, 11, S_vent_string);
 
 PWM_Duty(PWM_clav);
 
@@ -12314,7 +12299,6 @@ PWM_clav++;
 
 if (PORTGbits.RG4 == 0) {
 PWM_clav--;
-}
 }
 }
 }

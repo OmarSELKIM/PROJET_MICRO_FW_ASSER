@@ -69,9 +69,10 @@ struct tm currentTime;
 
 User usrTab[3];
 
-unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL;
+unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL, _val;
+char clav_pwm[2] = {'0','0'};
 char chaine_adc[100];
-char chaine_clav[4] = {'0', '0', '0', '0'};
+char chaine_clav[5] = {'0', '0', '0', '0', '\0'};
 char mot_de_passe[4] = {'0', '0', '0', '0'};
 char code_malette[4] = {'1', '2', '3', '4'};
 char code_clav[4] = {'_', '_', '_', '_'};
@@ -82,10 +83,12 @@ int a = 0, PWM_clav = 0, adc_value;
 unsigned char RX_U_2;
 char chaine_asser[16];
 int iREAD = 0;
+int iREAD1 = 0;
 volatile int count = 0;
 int S_vent = 0;
 bit flag_change = 0;
 int code_OK = 0;
+int menu = 0;
 
 /*
  *          - The user must provide three delay routines:
@@ -124,7 +127,7 @@ void UART_Putc(char c);
 void UART_Puts(char c[]);
 
 
-byte CLAVIER_GetPressedKey(void);
+void CLAVIER_GetPressedKey();
 
 unsigned int ADC_Read();
 

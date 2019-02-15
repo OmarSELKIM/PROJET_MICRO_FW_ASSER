@@ -12103,9 +12103,10 @@ struct tm currentTime;
 
 User usrTab[3];
 
-unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL;
+unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL, _val;
+char clav_pwm[2] = {'0','0'};
 char chaine_adc[100];
-char chaine_clav[4] = {'0', '0', '0', '0'};
+char chaine_clav[5] = {'0', '0', '0', '0', '\0'};
 char mot_de_passe[4] = {'0', '0', '0', '0'};
 char code_malette[4] = {'1', '2', '3', '4'};
 char code_clav[4] = {'_', '_', '_', '_'};
@@ -12116,12 +12117,14 @@ int a = 0, PWM_clav = 0, adc_value;
 unsigned char RX_U_2;
 char chaine_asser[16];
 int iREAD = 0;
+int iREAD1 = 0;
 volatile int count = 0;
 int S_vent = 0;
 bit flag_change = 0;
 int code_OK = 0;
+int menu = 0;
 
-# 96
+# 99
 void DelayFor1TCY(void);
 
 void Ports_Init();
@@ -12153,7 +12156,7 @@ void UART_Putc(char c);
 void UART_Puts(char c[]);
 
 
-char CLAVIER_GetPressedKey(void);
+void CLAVIER_GetPressedKey();
 
 unsigned int ADC_Read();
 
@@ -12338,7 +12341,6 @@ DelayLCDShort();
 }
 }
 
-
 void LCD_SetCursorAt(unsigned char _line, unsigned char _row) {
 if (_line == 1) {
 LCD_CTRL_PORT = (0x80) | ((_row) & 0x0f);
@@ -12387,10 +12389,10 @@ _delay((unsigned long)((20)*(11059200/4000.0)));
 
 void Interrupt_Init(void) {
 
-# 247
+# 246
 TRISBbits.TRISB0 = 1;
 
-# 252
+# 251
 INTCON2 = 0x00;
 INTCONbits.INT0IF = 0;
 INTCONbits.INT0IE = 1;
@@ -12401,14 +12403,67 @@ INTCONbits.GIE = 1;
 void interrupt interruption() {
 if (INTCONbits.INT0IF == 1) {
 clavier_read();
+CLAVIER_GetPressedKey();
 INTCONbits.INT0IF = 0;
 if (VAL_CLAV == 0x0f) {
 
 }
 }
+
+if (RC2IF) {
+while (PIR3bits.RC2IF == 0) {
+if (RCSTA2bits.OERR == 1) {
+RCSTA2bits.OERR = 0;
+RCSTA2bits.CREN = 0;
+RCSTA2bits.CREN = 1;
+DisplayOnLcdPosition(1, 10, "yes");
+}
+}
+RX_U_2 = RCREG2;
+UART_Putc(RX_U_2);
 }
 
-# 335
+switch (VAL_CLAV) {
+case 0x0c:
+
+menu = 0;
+_delay((unsigned long)((50)*(11059200/4000.0)));
+break;
+case 0x0d:
+
+menu = 1;
+_delay((unsigned long)((50)*(11059200/4000.0)));
+break;
+case 0x0e:
+LCD_CTRL_PORT = 0x80;
+_delay((unsigned long)((50)*(11059200/4000.0)));
+LCD_CTRL_PORT = 0x01;
+_delay((unsigned long)((50)*(11059200/4000.0)));
+PWM_Duty(0);
+break;
+case 0x0f:
+
+
+
+UART_Putc(0x14);
+
+
+
+UART_Puts("PWM:");
+_delay((unsigned long)((20)*(11059200/4000.0)));
+UART_Puts(chaine_clav);
+_delay((unsigned long)((20)*(11059200/4000.0)));
+UART_Puts("%");
+_delay((unsigned long)((20)*(11059200/4000.0)));
+PWM_Duty(PWM_clav);
+_delay((unsigned long)((20)*(11059200/4000.0)));
+UART_Puts(0x0A);
+UART_Puts(0x0D);
+_delay((unsigned long)((50)*(11059200/4000.0)));
+break;
+}
+}
+
 void UART_Putc(char c) {
 while (TXSTA1bits.TRMT == 0);
 TXREG1 = c;
@@ -12421,10 +12476,13 @@ UART_Putc(c[i]);
 }
 }
 
-char CLAVIER_GetPressedKey(void) {
-char _val = 0x00;
+void CLAVIER_GetPressedKey() {
 _val = CLAVIER & 0x0f;
-return _val;
+if (iREAD1 == 2) {
+iREAD1 = 0;
+}
+clav_pwm[iREAD1] = VAL_CLAV + 0x30;
+iREAD1++;
 }
 
 void clavier_read() {
@@ -12467,15 +12525,15 @@ void time_display(int line) {
 if (!RTCC_TimeGet(&currentTime)) {
 char buff[8];
 itoa(buff, currentTime.tm_mday, 10);
-DisplayOnLcdPosition(line, 0,buff);
-DisplayOnLcdPosition(line, 2,"/");
+DisplayOnLcdPosition(line, 2, buff);
+DisplayOnLcdPosition(line, 4, "/");
 itoa(buff, currentTime.tm_mon, 10);
-DisplayOnLcdPosition(line, 3, buff);
-DisplayOnLcdPosition(line, 5, " ");
+DisplayOnLcdPosition(line, 5, buff);
+DisplayOnLcdPosition(line, 7, " ");
 itoa(buff, currentTime.tm_hour, 10);
-DisplayOnLcdPosition(line, 6, buff);
-DisplayOnLcdPosition(line, 8, ":");
+DisplayOnLcdPosition(line, 8, buff);
+DisplayOnLcdPosition(line, 10, ":");
 itoa(buff, currentTime.tm_min, 10);
-DisplayOnLcdPosition(line, 9, buff);
+DisplayOnLcdPosition(line, 11, buff);
 }
 }
