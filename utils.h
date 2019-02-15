@@ -71,12 +71,13 @@ User usrTab[3];
 
 unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL;
 char chaine_adc[100];
-char chaine_clav[5] = {'0', '0', '0', '0', '\0'};
-char code_malette[5] = {'1', '2', '3', '4', '\0'};
-char code_clav[5] = {'_', '_', '_', '_', '\0'};
-char code_U1[5] = {0x31, 0x32, 0x33, 0x34, '\0'};
-char code_U2[5] = {'0', '0', '0', '0', '\0'};
-char code_U3[5] = {'0', '0', '0', '0', '\0'};
+char chaine_clav[4] = {'0', '0', '0', '0'};
+char mot_de_passe[4] = {'0', '0', '0', '0'};
+char code_malette[4] = {'1', '2', '3', '4'};
+char code_clav[4] = {'_', '_', '_', '_'};
+char code_U1[4] = {'1', '2', '3', '4'};
+char code_U2[4] = {'0', '0', '0', '0'};
+char code_U3[4] = {'0', '0', '0', '0'};
 int a = 0, PWM_clav = 0, adc_value;
 unsigned char RX_U_2;
 char chaine_asser[16];
@@ -84,6 +85,7 @@ int iREAD = 0;
 volatile int count = 0;
 int S_vent = 0;
 bit flag_change = 0;
+int code_OK = 0;
 
 /*
  *          - The user must provide three delay routines:
@@ -106,12 +108,13 @@ void DelayLCDShort(void);
 void LCD_Init();
 void LCD_Putc(char car);
 void LCD_Puts(char chaine[]);
-void lcdAFF(char info[]);
 void LCD_SetCursorAt(unsigned char _line, unsigned char _row);
 void LCD_Clear(void);
 void LCD_ReturnHome(void);
 void LCD_ShiftDisplay(byte _direction, int _offset);
 void clavier_read();
+void time_display(int line);
+
 
 void afficheur_write_clav();
 void DisplayOnLcdPosition(char line, char row, char data[]);

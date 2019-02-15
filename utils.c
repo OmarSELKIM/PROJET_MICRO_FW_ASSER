@@ -186,16 +186,6 @@ void LCD_Puts(char chaine[]) {
     }
 }
 
-void lcdAFF(char info[]) {
-    int tailletab = 4;
-    int i;
-    //char chaine[49] = "03/12 11:95 ????                        CODE:****";
-
-    for (i = 0; info[i]; i++) {
-        LCD_Putc(info[i]);
-
-    }
-}
 
 void LCD_SetCursorAt(unsigned char _line, unsigned char _row) {
     if (_line == 1) {
@@ -244,25 +234,25 @@ void DisplayOnLcdPosition(char line, char row, char data[]) {
 }
 
 void Interrupt_Init(void) {
-  /*  INTCON2 = 0b01111001;
-    INTCON = 0b11001001;
-    INTCONbits.INT0IE = 1;
-    INTCONbits.GIE = 1;
-    INTCONbits.INT0IF = 0;
-    RCONbits.IPEN = 1;
-    PIE1bits.ADIE = 1;
-    IPR1bits.ADIP = 1;
-    PIR1bits.ADIF = 0;
-      INTCON3 = 0b01001001;*/
-    TRISBbits.TRISB0=1;		/* Make INT0 pin as an input pin*/
-    
+    /*  INTCON2 = 0b01111001;
+      INTCON = 0b11001001;
+      INTCONbits.INT0IE = 1;
+      INTCONbits.GIE = 1;
+      INTCONbits.INT0IF = 0;
+      RCONbits.IPEN = 1;
+      PIE1bits.ADIE = 1;
+      IPR1bits.ADIP = 1;
+      PIR1bits.ADIF = 0;
+        INTCON3 = 0b01001001;*/
+    TRISBbits.TRISB0 = 1; /* Make INT0 pin as an input pin*/
+
     /* Also make PBADEN off in Configuration file or clear ADON 
     in ADCON0 so as to set analog pin as digital*/
 
-    INTCON2=0x00;		/* Set Interrupt detection on falling Edge*/
-    INTCONbits.INT0IF=0;	/* Clear INT0IF flag*/
-    INTCONbits.INT0IE=1;	/* Enable INT0 external interrupt*/
-    INTCONbits.GIE=1;		/* Enable Global Interrupt*/
+    INTCON2 = 0x00; /* Set Interrupt detection on falling Edge*/
+    INTCONbits.INT0IF = 0; /* Clear INT0IF flag*/
+    INTCONbits.INT0IE = 1; /* Enable INT0 external interrupt*/
+    INTCONbits.GIE = 1; /* Enable Global Interrupt*/
     ei();
 }
 
@@ -270,8 +260,8 @@ void interrupt interruption() {
     if (INTCONbits.INT0IF == 1) {
         clavier_read();
         INTCONbits.INT0IF = 0;
-        if (VAL_CLAV == 0x0f){
-            
+        if (VAL_CLAV == 0x0f) {
+
         }
     }
 }
@@ -393,4 +383,22 @@ unsigned int ADC_Read() {
     PWM_VAL = (char) (valeur_pwm);
     sprintf(chaine_adc, "%3d", pot_value * 100 / 1023);
     return pot_value;
+}
+
+void time_display(int line) {
+   // RTCC_Initialize();
+    if (!RTCC_TimeGet(&currentTime)) {
+        char buff[8];
+        itoa(buff, currentTime.tm_mday, 10);
+        DisplayOnLcdPosition(line, 0,buff);
+        DisplayOnLcdPosition(line, 2,"/");
+        itoa(buff, currentTime.tm_mon, 10);
+        DisplayOnLcdPosition(line, 3, buff);
+        DisplayOnLcdPosition(line, 5, " ");
+        itoa(buff, currentTime.tm_hour, 10);
+        DisplayOnLcdPosition(line, 6, buff);
+        DisplayOnLcdPosition(line, 8, ":");
+        itoa(buff, currentTime.tm_min, 10);
+        DisplayOnLcdPosition(line, 9, buff);
+    }
 }

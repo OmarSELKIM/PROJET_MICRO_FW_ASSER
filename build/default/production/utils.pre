@@ -12105,12 +12105,13 @@ User usrTab[3];
 
 unsigned char VAL_CLAV = 0, cpt1TCY = 0, RX_U_2, PWM_VAL;
 char chaine_adc[100];
-char chaine_clav[5] = {'0', '0', '0', '0', '\0'};
-char code_malette[5] = {'1', '2', '3', '4', '\0'};
-char code_clav[5] = {'_', '_', '_', '_', '\0'};
-char code_U1[5] = {0x31, 0x32, 0x33, 0x34, '\0'};
-char code_U2[5] = {'0', '0', '0', '0', '\0'};
-char code_U3[5] = {'0', '0', '0', '0', '\0'};
+char chaine_clav[4] = {'0', '0', '0', '0'};
+char mot_de_passe[4] = {'0', '0', '0', '0'};
+char code_malette[4] = {'1', '2', '3', '4'};
+char code_clav[4] = {'_', '_', '_', '_'};
+char code_U1[4] = {'1', '2', '3', '4'};
+char code_U2[4] = {'0', '0', '0', '0'};
+char code_U3[4] = {'0', '0', '0', '0'};
 int a = 0, PWM_clav = 0, adc_value;
 unsigned char RX_U_2;
 char chaine_asser[16];
@@ -12118,8 +12119,9 @@ int iREAD = 0;
 volatile int count = 0;
 int S_vent = 0;
 bit flag_change = 0;
+int code_OK = 0;
 
-# 94
+# 96
 void DelayFor1TCY(void);
 
 void Ports_Init();
@@ -12135,12 +12137,13 @@ void DelayLCDShort(void);
 void LCD_Init();
 void LCD_Putc(char car);
 void LCD_Puts(char chaine[]);
-void lcdAFF(char info[]);
 void LCD_SetCursorAt(unsigned char _line, unsigned char _row);
 void LCD_Clear(void);
 void LCD_ReturnHome(void);
 void LCD_ShiftDisplay(char _direction, int _offset);
 void clavier_read();
+void time_display(int line);
+
 
 void afficheur_write_clav();
 void DisplayOnLcdPosition(char line, char row, char data[]);
@@ -12335,16 +12338,6 @@ DelayLCDShort();
 }
 }
 
-void lcdAFF(char info[]) {
-int tailletab = 4;
-int i;
-
-
-for (i = 0; info[i]; i++) {
-LCD_Putc(info[i]);
-
-}
-}
 
 void LCD_SetCursorAt(unsigned char _line, unsigned char _row) {
 if (_line == 1) {
@@ -12394,14 +12387,14 @@ _delay((unsigned long)((20)*(11059200/4000.0)));
 
 void Interrupt_Init(void) {
 
-# 257
-TRISBbits.TRISB0=1;
+# 247
+TRISBbits.TRISB0 = 1;
 
-# 262
-INTCON2=0x00;
-INTCONbits.INT0IF=0;
-INTCONbits.INT0IE=1;
-INTCONbits.GIE=1;
+# 252
+INTCON2 = 0x00;
+INTCONbits.INT0IF = 0;
+INTCONbits.INT0IE = 1;
+INTCONbits.GIE = 1;
 (INTCONbits.GIE = 1);
 }
 
@@ -12409,13 +12402,13 @@ void interrupt interruption() {
 if (INTCONbits.INT0IF == 1) {
 clavier_read();
 INTCONbits.INT0IF = 0;
-if (VAL_CLAV == 0x0f){
+if (VAL_CLAV == 0x0f) {
 
 }
 }
 }
 
-# 345
+# 335
 void UART_Putc(char c) {
 while (TXSTA1bits.TRMT == 0);
 TXREG1 = c;
@@ -12467,4 +12460,22 @@ valeur_pwm = pot_value * 100 / 1023;
 PWM_VAL = (char) (valeur_pwm);
 sprintf(chaine_adc, "%3d", pot_value * 100 / 1023);
 return pot_value;
+}
+
+void time_display(int line) {
+
+if (!RTCC_TimeGet(&currentTime)) {
+char buff[8];
+itoa(buff, currentTime.tm_mday, 10);
+DisplayOnLcdPosition(line, 0,buff);
+DisplayOnLcdPosition(line, 2,"/");
+itoa(buff, currentTime.tm_mon, 10);
+DisplayOnLcdPosition(line, 3, buff);
+DisplayOnLcdPosition(line, 5, " ");
+itoa(buff, currentTime.tm_hour, 10);
+DisplayOnLcdPosition(line, 6, buff);
+DisplayOnLcdPosition(line, 8, ":");
+itoa(buff, currentTime.tm_min, 10);
+DisplayOnLcdPosition(line, 9, buff);
+}
 }
